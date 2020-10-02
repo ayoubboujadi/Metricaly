@@ -1,0 +1,10 @@
+<nb-card style="width: 250px">
+  <nb-card-body>
+    <color-sketch [color]="color" (onChangeComplete)="changeComplete($event)"></color-sketch>
+  </nb-card-body>
+  <nb-card-footer>
+    <button nbButton status="danger" size="tiny" (click)="onCancelClick()">Cancel</button>
+    <button nbButton status="success" size="tiny" style="margin-left: 20px;" (click)="submit()">Submit</button>
+  </nb-card-footer>
+</nb-card>
+

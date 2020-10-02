@@ -1,0 +1,15 @@
+<div *ngIf='!editMode' (click)='editMode=true' class='cell'>
+  {{ data }}
+</div>
+
+<div *ngIf='editMode'>
+  <input #input appAutofocus (keydown.enter)='$event.target.blur()' (focusout)="cancel()" [(ngModel)]='data' class='cellInput' type='{{ inputType }}' style="width: 70%;">
+  <button (mousedown)="save($event)">Save</button>
+  <button>Cancel</button>
+</div>
+
+
+
+<!--HOW TO USE
+
+<app-edit-input [data]='cost' (focusOut)='saveCost($event)'></app-edit-input>-->

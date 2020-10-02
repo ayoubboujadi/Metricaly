@@ -1,0 +1,91 @@
+
+
+<nb-card style="background: #f7f7f7;">
+  <nb-card-body>
+    <div style="display: block; height:400px">
+      <canvas baseChart
+              [datasets]="lineChartData"
+              [labels]="lineChartLabels"
+              [options]="lineChartOptions"
+              [colors]="lineChartColors"
+              [legend]="lineChartLegend"
+              [chartType]="lineChartType"
+              [plugins]="lineChartPlugins">
+      </canvas>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+
+<button (click)="addMetric()">Add metric</button>
+
+
+
+<nb-card>
+  <nb-card-body>
+    <nb-tabset>
+      <nb-tab tabTitle="Metrics">
+        <nb-list *ngIf="allMetrics">
+          <nb-list-item class="list-metric-item" *ngFor="let metric of allMetrics">
+            <ng-container *ngIf="!metric.isPlotted">
+              <span>{{ metric.id }}</span>
+              <span>{{ metric.namespace }}</span>
+              <span>{{ metric.name }}</span>
+              <!--<button mat-icon-button aria-label="Example icon button with a vertical three dot icon" (click)="addMetricToPlot(metric)">
+                <mat-icon>add_circle</mat-icon>
+              </button>-->
+
+              <button (click)="addMetricToPlot(metric)" nbButton ghost status="primary"><nb-icon icon="plus-square-outline"></nb-icon></button>
+
+            </ng-container>
+          </nb-list-item>
+        </nb-list>
+
+      </nb-tab>
+
+      <nb-tab tabTitle="Plotted Metrics">
+        <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="plottedMetrics">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Label</th>
+              <th>Color</th>
+              <th>YAxis</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let metric of plottedMetrics">
+              <td>{{ metric.id }}</td>
+              <td>
+                <app-editable-field [data]='metric.label' (focusOut)='metric.label = $event;  updateLineChartData()'></app-editable-field>
+              </td>
+              <td>
+                <span (click)="openColorDialog(metric)" class="picker-button" [style.background]='metric.color'></span>
+              </td>
+              <td>
+                <!--<mat-button-toggle-group #group="matButtonToggleGroup" [value]="metric.yAxis" (change)="metric.yAxis = $event.source.value; updateLineChartData()">
+                  <mat-button-toggle value="left" aria-label="Text align left">
+                    <mat-icon>chevron_left</mat-icon>
+                  </mat-button-toggle>
+                  <mat-button-toggle value="right" aria-label="Text align right">
+                    <mat-icon>chevron_right</mat-icon>
+                  </mat-button-toggle>
+                </mat-button-toggle-group>-->
+
+              </td>
+              <td>
+                <button nbButton ghost status="danger" (click)="removeMetricFromPlot(metric)"><nb-icon icon="minus-square-outline"></nb-icon></button>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </nb-tab>
+      <nb-tab tabTitle="Widget Settings">
+        <app-widget-settings-editor [settings]="widgetSettings" (settingsChange)="updateWidgetSettings($event)"></app-widget-settings-editor>
+      </nb-tab>
+    </nb-tabset>
+
+  </nb-card-body>
+</nb-card>

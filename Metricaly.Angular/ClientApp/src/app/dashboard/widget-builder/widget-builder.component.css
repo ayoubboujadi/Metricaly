@@ -1,0 +1,18 @@
+.picker-button {
+  display: block;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
+  border-radius: 3px;
+}
+
+
+.sketch-picker {
+  box-shadow: none;
+}
+
+
+.list-metric-item span{ 
+    flex: 1;
+}
