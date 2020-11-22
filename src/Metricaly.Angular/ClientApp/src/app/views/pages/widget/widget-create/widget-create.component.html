@@ -1,0 +1,52 @@
+<div class="row justify-content-center">
+  <nb-card class="col-xl-6 col-lg-8 col-md-12" accent="success" [nbSpinner]="appsLoading" nbSpinnerStatus="primary"
+    nbSpinnerSize="large">
+    <nb-card-header>
+      Create new Widget
+    </nb-card-header>
+
+    <nb-card-body>
+      <form>
+        <div class="form-group">
+          <label for="application" class="label">Widget type</label>
+          <div>
+            <label style="padding: 4px; margin: 4px;">
+              <input type="radio" name="widgetType" value="LineChart" [(ngModel)]="defaultChoice"
+                (ngModelChange)="choose($event)">
+              <img
+                src="https://www.clipartmax.com/png/full/286-2860838_double-line-graph-icon-clipart-bar-chart-black-and-white.png">
+              <span>Line Chart</span>
+            </label>
+            <label style="padding: 4px; margin: 4px;">
+              <input type="radio" name="wigetType" value="AnotherType" [(ngModel)]="defaultChoice"
+                (ngModelChange)="choose($event)">
+              <img
+                src="https://www.clipartmax.com/png/full/286-2860838_double-line-graph-icon-clipart-bar-chart-black-and-white.png">
+              <span>Another Type</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="application" class="label">Application</label>
+          <nb-select fullWidth placeholder="Choose an application..." [(ngModel)]="selectedApplicationId"
+            name="application">
+            <nb-option *ngFor="let application of applications" [value]="application.id">{{application.name}}
+            </nb-option>
+          </nb-select>
+        </div>
+        <div class="form-group">
+          <label for="widgetName" class="label">Widget's name</label>
+          <input nbInput fullWidth type="text" name="widgetName" placeholder="Name" [(ngModel)]="widgetName">
+        </div>
+
+        <button nbButton class="float-right mt-4" outline size="small" status="success"
+          [disabled]="!selectedApplicationId || !widgetName" (click)="createWidget()" [nbSpinner]="creatingWidget"
+          nbSpinnerStatus="primary">
+          <nb-icon icon="plus-circle"></nb-icon>
+          Create
+        </button>
+      </form>
+    </nb-card-body>
+  </nb-card>
+</div>

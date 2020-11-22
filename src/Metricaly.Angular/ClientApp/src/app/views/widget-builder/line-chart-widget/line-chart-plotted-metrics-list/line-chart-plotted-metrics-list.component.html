@@ -1,0 +1,51 @@
+<table class='table table-light' *ngIf="plottedMetrics">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Label</th>
+      <th>Color</th>
+      <th>YAxis</th>
+      <th>Aggregation Type</th>
+      <th>Remove</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let metric of plottedMetrics">
+      <td>{{ metric.metricId }}</td>
+      <td>
+        <app-editable-field [data]='metric.label' (focusOut)='metric.label = $event; updatePlottedMetrics();'>
+        </app-editable-field>
+      </td>
+      <td>
+        <span (click)="openColorPickerDialog(metric)" class="color-picker-button"
+          [style.background]='metric.color'></span>
+      </td>
+      <td>
+        <button nbButton ghost status="basic" [disabled]="metric.yAxis == 'left'"
+          (click)="metric.yAxis = 'left'; updatePlottedMetrics()">
+          <nb-icon icon="chevron-left-outline"></nb-icon>
+        </button>
+
+        <button nbButton ghost status="basic" [disabled]="metric.yAxis == 'right'"
+          (click)="metric.yAxis = 'right'; updatePlottedMetrics()">
+          <nb-icon icon="chevron-right-outline"></nb-icon>
+        </button>
+      </td>
+      <td>
+        <nb-select placeholder="Sampling type" [(ngModel)]="metric.samplingType"
+          (ngModelChange)="handleSamplingTypeChange(metric)">
+          <nb-option value="Average">Average</nb-option>
+          <nb-option value="Sum">Sum</nb-option>
+          <nb-option value="Min">Min</nb-option>
+          <nb-option value="Max">Max</nb-option>
+          <nb-option value="SimpleCount">Simple Count</nb-option>
+        </nb-select>
+      </td>
+      <td>
+        <button nbButton ghost status="danger" (click)="removeMetric(metric)">
+          <nb-icon icon="minus-square-outline"></nb-icon>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

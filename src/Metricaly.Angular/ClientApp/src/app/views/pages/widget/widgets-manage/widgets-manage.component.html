@@ -1,0 +1,58 @@
+<nb-card>
+  <nb-card-header>
+
+    <div class="d-flex">
+      <div class="mr-auto">
+        <span class="label mr-3">Application: </span>
+        <nb-select placeholder="Choose an application..." status="primary" size="small"
+          [ngModel]="selectedApplicationId" (ngModelChange)="handleSelectedApplicationChange($event)" name="application"
+          [nbSpinner]="appsLoading" nbSpinnerStatus="primary" [disabled]="appsLoading">
+          <nb-option *ngFor="let application of applications" [value]="application.id">{{application.name}}</nb-option>
+        </nb-select>
+      </div>
+      <button nbButton status="success" size="small" outline [disabled]="widgetsLoading" (click)="loadWidgets()">
+        <nb-icon icon="refresh-outline"></nb-icon>
+      </button>
+    </div>
+  </nb-card-header>
+  <nb-card-body [nbSpinner]="widgetsLoading" nbSpinnerStatus="primary" nbSpinnerSize="large">
+
+    <table class="table" *ngIf="widgets">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Created Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngIf="widgets && widgets.length == 0">
+          <td colspan="4">
+            <div class="justify-content-center d-flex">
+              <span>There are no Widgets for the selected Application.</span>
+            </div>
+          </td>
+        </tr>
+
+        <tr *ngFor="let widget of widgets">
+          <td>{{widget.name}}</td>
+          <td>{{widget.type}}</td>
+          <td>Add date later</td>
+          <td>
+            <a nbButton nbTooltip="Edit widget" nbTooltipPlacement="top" nbTooltipStatus="info" status="info"
+              size="small" [routerLink]="['/widget-builder/line-chart', widget.id]">
+              <nb-icon icon="edit-outline"></nb-icon>
+            </a>
+
+            <button nbButton nbTooltip="Delete widget" nbTooltipPlacement="top" nbTooltipStatus="warning"
+              status="warning" size="small" class="ml-3" (click)="deleteWidget(widget)">
+              <nb-icon icon="trash-2-outline"></nb-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+</nb-card>

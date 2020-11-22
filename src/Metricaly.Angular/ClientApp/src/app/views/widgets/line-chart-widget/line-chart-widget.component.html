@@ -1,0 +1,11 @@
+
+
+<div echarts
+     style="width:100%; height:100%"
+     [options]="chartOptions"
+     [merge]="updateOptions"
+     [loading]="loading"
+     (chartInit)="this.onChartInit($event)"
+     class="line-chart">
+</div>
+

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AdysTech.InfluxDB.Client.Net.Core" Version="0.21.0" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
+    <PackageReference Include="StackExchange.Redis" Version="2.1.58" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Metricaly.Angular\Metricaly.Angular.csproj" />
+    <ProjectReference Include="..\Metricaly.Core\Metricaly.Core.csproj" />
+    <ProjectReference Include="..\Metricaly.Infrastructure\Metricaly.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

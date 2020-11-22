@@ -1,0 +1,42 @@
+
+<div class="row justify-content-center">
+  <nb-card class="col-xl-6 col-lg-8 col-md-12"
+           accent="success"
+           [nbSpinner]="appsLoading"
+           nbSpinnerStatus="primary"
+           nbSpinnerSize="large">
+    <nb-card-header>
+      Create new Dashboard
+    </nb-card-header>
+
+    <nb-card-body class="d-flex justify-content-center">
+
+      <form>
+        <div class="form-group">
+          <label for="application" class="label">Application</label>
+          <nb-select fullWidth placeholder="Choose an application..." [(ngModel)]="selectedApplicationId" name="application">
+            <nb-option *ngFor="let application of applications" [value]="application.id">{{application.name}}</nb-option>
+          </nb-select>
+        </div>
+        <div class="form-group">
+          <label for="dashboardName" class="label">Dashboard's name</label>
+          <input nbInput fullWidth type="text" name="dashboardName" placeholder="Name" [(ngModel)]="dashboardName">
+        </div>
+
+        <button nbButton
+                class="float-right mt-4"
+                outline
+                size="small"
+                status="success"
+                [disabled]="!selectedApplicationId || !dashboardName || savingDashboard"
+                (click)="createdDashboard()"
+                [nbSpinner]="savingDashboard"
+                nbSpinnerStatus="primary">
+          <nb-icon icon="plus-circle"></nb-icon>
+          Create
+        </button>
+      </form>
+
+    </nb-card-body>
+    </nb-card>
+</div>

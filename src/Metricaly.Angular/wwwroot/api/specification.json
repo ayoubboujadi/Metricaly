@@ -1,0 +1,1344 @@
+{
+  "x-generator": "NSwag v13.8.2.0 (NJsonSchema v10.2.1.0 (Newtonsoft.Json v12.0.0.0))",
+  "swagger": "2.0",
+  "info": {
+    "title": "Metricaly API",
+    "description": "REST API for Metricaly.",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/Auth/signup": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_SignUp",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "registerCommand",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RegisterCommand"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
+    "/api/Auth/signin": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_SignIn",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "authenticateCommand",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AuthenticateCommand"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/AuthenticatedDto"
+            }
+          }
+        }
+      }
+    },
+    "/Metric/query": {
+      "post": {
+        "tags": [
+          "Metric"
+        ],
+        "operationId": "Metric_GetMetricValues",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GetMetricTimeSeriesQuery"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MetricsTimeSeriesResultDto"
+            }
+          }
+        }
+      }
+    },
+    "/Metric/{applicationId}/metrics": {
+      "get": {
+        "tags": [
+          "Metric"
+        ],
+        "operationId": "Metric_ListMetrics",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "applicationId",
+            "in": "path",
+            "required": true,
+            "format": "guid",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/MetricDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Application": {
+      "get": {
+        "tags": [
+          "Application"
+        ],
+        "operationId": "Application_List",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ApplicationDto"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Application"
+        ],
+        "operationId": "Application_Create",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "createApplicationCommand",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateApplicationCommand"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
+    "/api/Dashboard": {
+      "put": {
+        "tags": [
+          "Dashboard"
+        ],
+        "operationId": "Dashboard_Create",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "command",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateDashboardCommand"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Dashboard"
+        ],
+        "operationId": "Dashboard_Update",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "command",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateDashboardCommand"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
+    "/api/Dashboard/get/{dashboardId}": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "operationId": "Dashboard_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "dashboardId",
+            "in": "path",
+            "required": true,
+            "format": "guid",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/DashboardDetailsVm"
+            }
+          }
+        }
+      }
+    },
+    "/api/Dashboard/list/{applicationId}": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "operationId": "Dashboard_List",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "applicationId",
+            "in": "path",
+            "required": true,
+            "format": "guid",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DashboardDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Dashboard/{dashboardId}": {
+      "delete": {
+        "tags": [
+          "Dashboard"
+        ],
+        "operationId": "Dashboard_Delete",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "dashboardId",
+            "in": "path",
+            "required": true,
+            "format": "guid",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
+    "/api/Dashboard/get/favorite": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "operationId": "Dashboard_GetFavoriteList",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DashboardDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Dashboard/add/favorite": {
+      "post": {
+        "tags": [
+          "Dashboard"
+        ],
+        "operationId": "Dashboard_AddFavorite",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "command",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FavoriteDashboardCommand"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
+    "/api/Widget": {
+      "post": {
+        "tags": [
+          "Widget"
+        ],
+        "operationId": "Widget_Create",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateWidgetCommand"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            }
+          }
+        }
+      }
+    },
+    "/api/Widget/list/{applicationId}": {
+      "get": {
+        "tags": [
+          "Widget"
+        ],
+        "operationId": "Widget_List",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "applicationId",
+            "in": "path",
+            "required": true,
+            "format": "guid",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WidgetDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Widget/type/{widgetId}": {
+      "get": {
+        "tags": [
+          "Widget"
+        ],
+        "operationId": "Widget_GetWidget",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "widgetId",
+            "in": "path",
+            "required": true,
+            "format": "guid",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/WidgetDto"
+            }
+          }
+        }
+      }
+    },
+    "/api/LineChartWidget": {
+      "put": {
+        "tags": [
+          "LineChartWidget"
+        ],
+        "operationId": "LineChartWidget_Update",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "requestData",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateWidgetCommandOfLineChartWidget"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
+    "/api/LineChartWidget/get/{widgetId}": {
+      "get": {
+        "tags": [
+          "LineChartWidget"
+        ],
+        "operationId": "LineChartWidget_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "widgetId",
+            "in": "path",
+            "required": true,
+            "format": "guid",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/WidgetDetailsVmOfLineChartWidget"
+            }
+          }
+        }
+      }
+    },
+    "/api/LineChartWidget/get": {
+      "post": {
+        "tags": [
+          "LineChartWidget"
+        ],
+        "operationId": "LineChartWidget_ReadMultiple",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "widgetIds",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "guid"
+              }
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WidgetDetailsVmOfLineChartWidget"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "RegisterCommand": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "AuthenticatedDto": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "userEmail": {
+          "type": "string"
+        }
+      }
+    },
+    "AuthenticateCommand": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "MetricsTimeSeriesResultDto": {
+      "type": "object",
+      "required": [
+        "samplingValue",
+        "count"
+      ],
+      "properties": {
+        "samplingValue": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "timestamps": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetricTimeSeriesValueDto"
+          }
+        }
+      }
+    },
+    "MetricTimeSeriesValueDto": {
+      "type": "object",
+      "properties": {
+        "guid": {
+          "type": "string"
+        },
+        "metricName": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      }
+    },
+    "GetMetricTimeSeriesQuery": {
+      "type": "object",
+      "required": [
+        "startTimestamp",
+        "samplingTime",
+        "applicationId"
+      ],
+      "properties": {
+        "startTimestamp": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "endTimestamp": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "samplingTime": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "applicationId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetricNamespaceDTO"
+          }
+        }
+      }
+    },
+    "MetricNamespaceDTO": {
+      "type": "object",
+      "required": [
+        "samplingType"
+      ],
+      "properties": {
+        "guid": {
+          "type": "string"
+        },
+        "metricName": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "samplingType": {
+          "$ref": "#/definitions/SamplingType"
+        }
+      }
+    },
+    "SamplingType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Average",
+        "Sum",
+        "Min",
+        "Max",
+        "SimpleCount"
+      ],
+      "enum": [
+        "Average",
+        "Sum",
+        "Min",
+        "Max",
+        "SimpleCount"
+      ]
+    },
+    "MetricDto": {
+      "type": "object",
+      "required": [
+        "applicationId",
+        "id"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "applicationId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "id": {
+          "type": "string",
+          "format": "guid"
+        }
+      }
+    },
+    "ApplicationDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "apiKey": {
+          "type": "string"
+        },
+        "obfuscatedApiKey": {
+          "type": "string"
+        }
+      }
+    },
+    "CreateApplicationCommand": {
+      "type": "object",
+      "properties": {
+        "applicationName": {
+          "type": "string"
+        }
+      }
+    },
+    "CreateDashboardCommand": {
+      "type": "object",
+      "required": [
+        "applicationId"
+      ],
+      "properties": {
+        "applicationId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "dashboardName": {
+          "type": "string"
+        }
+      }
+    },
+    "UpdateDashboardCommand": {
+      "type": "object",
+      "required": [
+        "dashboardId",
+        "applicationId"
+      ],
+      "properties": {
+        "dashboardId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "applicationId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "dashboardWidgets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DashboardWidget"
+          }
+        }
+      }
+    },
+    "DashboardWidget": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseEntity"
+        },
+        {
+          "type": "object",
+          "required": [
+            "width",
+            "height",
+            "x",
+            "y",
+            "dashboardId",
+            "widgetId"
+          ],
+          "properties": {
+            "width": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "height": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "y": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "dashboardId": {
+              "type": "string",
+              "format": "guid"
+            },
+            "dashboard": {
+              "$ref": "#/definitions/Dashboard"
+            },
+            "widgetId": {
+              "type": "string",
+              "format": "guid"
+            },
+            "widget": {
+              "$ref": "#/definitions/Widget"
+            }
+          }
+        }
+      ]
+    },
+    "Dashboard": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseEntity"
+        },
+        {
+          "type": "object",
+          "required": [
+            "applicationId",
+            "isFavorite"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "applicationId": {
+              "type": "string",
+              "format": "guid"
+            },
+            "isFavorite": {
+              "type": "boolean"
+            },
+            "dashboardWidgets": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DashboardWidget"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "BaseEntity": {
+      "type": "object",
+      "required": [
+        "id",
+        "createdDate"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Widget": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseEntity"
+        },
+        {
+          "type": "object",
+          "required": [
+            "applicationId"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "data": {
+              "type": "string"
+            },
+            "applicationId": {
+              "type": "string",
+              "format": "guid"
+            }
+          }
+        }
+      ]
+    },
+    "DashboardDetailsVm": {
+      "type": "object",
+      "properties": {
+        "dashboard": {
+          "$ref": "#/definitions/DashboardDto"
+        },
+        "dashboardWidgets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DashboardWidgetDto"
+          }
+        }
+      }
+    },
+    "DashboardDto": {
+      "type": "object",
+      "required": [
+        "applicationId",
+        "id",
+        "createdDate",
+        "isFavorite",
+        "dashboardWidgetsCount"
+      ],
+      "properties": {
+        "applicationId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "isFavorite": {
+          "type": "boolean"
+        },
+        "dashboardWidgetsCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "DashboardWidgetDto": {
+      "type": "object",
+      "required": [
+        "width",
+        "height",
+        "x",
+        "y",
+        "widgetId"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "height": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "x": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "y": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "widgetId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "widgetType": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "guid"
+        }
+      }
+    },
+    "FavoriteDashboardCommand": {
+      "type": "object",
+      "required": [
+        "dashboardId",
+        "isFavorite"
+      ],
+      "properties": {
+        "dashboardId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "isFavorite": {
+          "type": "boolean"
+        }
+      }
+    },
+    "CreateWidgetCommand": {
+      "type": "object",
+      "required": [
+        "applicationId",
+        "widgetType"
+      ],
+      "properties": {
+        "applicationId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "widgetType": {
+          "$ref": "#/definitions/WidgetType"
+        }
+      }
+    },
+    "WidgetType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "LineChart"
+      ],
+      "enum": [
+        "LineChart"
+      ]
+    },
+    "WidgetDto": {
+      "type": "object",
+      "required": [
+        "applicationId",
+        "id",
+        "createdDate"
+      ],
+      "properties": {
+        "applicationId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "UpdateWidgetCommandOfLineChartWidget": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "widgetData": {
+          "$ref": "#/definitions/LineChartWidget"
+        }
+      }
+    },
+    "LineChartWidget": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/WidgetData"
+        },
+        {
+          "type": "object",
+          "required": [
+            "samplingTime"
+          ],
+          "properties": {
+            "samplingTime": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "plottedMetrics": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LineChartPlottedMetric"
+              }
+            },
+            "widgetSettings": {
+              "$ref": "#/definitions/LineChartWidgetSettings"
+            }
+          }
+        }
+      ]
+    },
+    "LineChartPlottedMetric": {
+      "type": "object",
+      "required": [
+        "metricId"
+      ],
+      "properties": {
+        "metricId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "guid": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "metricName": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "yAxis": {
+          "type": "string"
+        },
+        "samplingType": {
+          "type": "string"
+        }
+      }
+    },
+    "LineChartWidgetSettings": {
+      "type": "object",
+      "required": [
+        "displayLegend",
+        "smoothLines",
+        "filled"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "legendPosition": {
+          "type": "string"
+        },
+        "displayLegend": {
+          "type": "boolean"
+        },
+        "smoothLines": {
+          "type": "boolean"
+        },
+        "filled": {
+          "type": "boolean"
+        },
+        "xAxisSettings": {
+          "$ref": "#/definitions/LineChartAxisSettings"
+        },
+        "yLeftAxisSettings": {
+          "$ref": "#/definitions/LineChartAxisSettings"
+        },
+        "yRightAxisSettings": {
+          "$ref": "#/definitions/LineChartAxisSettings"
+        }
+      }
+    },
+    "LineChartAxisSettings": {
+      "type": "object",
+      "required": [
+        "displayLabel",
+        "displayGridLines",
+        "min",
+        "max"
+      ],
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "displayLabel": {
+          "type": "boolean"
+        },
+        "displayGridLines": {
+          "type": "boolean"
+        },
+        "min": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "max": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "WidgetData": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "WidgetDetailsVmOfLineChartWidget": {
+      "type": "object",
+      "properties": {
+        "widget": {
+          "$ref": "#/definitions/WidgetDto"
+        },
+        "widgetData": {
+          "$ref": "#/definitions/LineChartWidget"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+
+
+<nb-card [nbSpinner]="loading"
+     nbSpinnerStatus="primary"
+     nbSpinnerSize="giant">
+  <nb-card-header class="d-flex">
+    <span  class="mr-auto">
+      Application ..... widgets
+    </span>
+
+    <button nbButton ghost><nb-icon icon="close-circle-outline"></nb-icon></button>
+  </nb-card-header>
+
+  <nb-card-body>
+
+    <table class="table-light table">
+      <thead>
+        <tr>
+          <th>Widget Name</th>
+          <th>Widget Type</th>
+          <th>Add to dashboard</th>
+          <th>Already in dashboard?</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let widget of widgets">
+          <td>{{widget.name}}</td>
+          <td>{{widget.type}}</td>
+          <td><button nbButton ghost status="success" (click)="addWidget(widget)"><nb-icon icon="plus-square-outline"></nb-icon></button></td>
+          <td>
+            <nb-badge text="yes" status="success" position="relative" style="font-size: 12px;"></nb-badge>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </nb-card-body>
+
+  <nb-card-footer>
+    <button class="float-right" status="success" nbButton (click)="save()">Save</button>
+  </nb-card-footer>
+</nb-card>

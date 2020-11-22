@@ -1,0 +1,50 @@
+<div *ngIf="applications && applications.length == 0">
+  It seems that you do not have any applications yet.
+</div>
+
+
+<table class="table" *ngIf="applications">
+  <thead>
+    <tr>
+      <th>Application Name</th>
+      <th>ApiKey</th>
+      <th>Creation Date</th>
+      <th>Actions</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let application of applications">
+      <td>{{application.id}}</td>
+      <td>
+        {{application.obfuscatedApiKey}}
+
+        <button nbButton [copy-to-clipboard]="application.apiKey" (copied)="handleApiKeyCopied($event)" size="small"
+          class="ml-2" nbTooltip="Copy to clipboard">
+          <nb-icon icon="copy-outline"></nb-icon>
+        </button>
+      </td>
+      <td>{{application.createdDate | date}}</td>
+      <td>
+        <button nbButton nbTooltip="Delete application" nbTooltipPlacement="top" nbTooltipStatus="warning"
+          status="warning" size="small" class="ml-3" (click)="deleteApplication(application)">
+          <nb-icon icon="trash-2-outline"></nb-icon>
+        </button>
+      </td>
+
+      <td>
+        <a nbButton outline nbTooltip="Manage widgets" nbTooltipPlacement="top" nbTooltipStatus="info" status="info"
+          size="small" [routerLink]="['/widget/manage']" [queryParams]="{ application: application.id}">
+          <nb-icon icon="bar-chart-2-outline">
+          </nb-icon>
+        </a>
+
+        <a nbButton outline nbTooltip="Manage dashbords" nbTooltipPlacement="top" nbTooltipStatus="info" class="ml-2"
+          status="info" size="small" [routerLink]="['/dashboard-page/manage']"
+          [queryParams]="{ application: application.id}">
+          <nb-icon icon="monitor-outline"></nb-icon>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

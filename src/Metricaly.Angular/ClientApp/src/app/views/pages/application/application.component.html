@@ -1,0 +1,39 @@
+
+
+<nb-card [nbSpinner]="appsLoading"
+         nbSpinnerStatus="primary"
+         nbSpinnerSize="large">
+  <nb-card-header>
+
+
+    <div class="d-flex">
+      <div class="mr-auto">
+        Applications' List
+      </div>
+      <button nbButton
+              outline
+              status="success"
+              size="small"
+              nbTooltip="Create new Application"
+              nbTooltipStatus="success"
+              (click)="handleCreateApplicationClick()">
+        <nb-icon icon="plus-outline"></nb-icon>
+      </button>
+      <button nbButton
+              outline
+              status="info"
+              size="small"
+              nbTooltip="Refresh applications"
+              nbTooltipStatus="info"
+              (click)="loadApplications()"
+              class="ml-2">
+        <nb-icon icon="refresh-outline"></nb-icon>
+      </button>
+    </div>
+
+  </nb-card-header>
+
+  <nb-card-body>
+    <app-application-manage [applications]="applications"></app-application-manage>
+  </nb-card-body>
+</nb-card>

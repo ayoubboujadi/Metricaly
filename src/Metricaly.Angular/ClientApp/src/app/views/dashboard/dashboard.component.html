@@ -1,0 +1,57 @@
+<div [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+
+  <nb-card>
+    <nb-card-header>
+      <div class="d-flex">
+        <app-daterange-picker class="mr-auto" [selectedDaterange]="selectedDaterange"
+          (selectedDaterangeChange)="handleSelectedDaterangeChange($event)">
+        </app-daterange-picker>
+
+        <button nbButton size="small" (click)="addWidget()" class="mr-2">
+          <nb-icon icon="plus-outline"> </nb-icon>
+          Add Widget
+        </button>
+        <button nbButton [disabled]="!requiresSaving" size="small" (click)="saveDashboard()"
+          [nbSpinner]="savingDashboard" nbSpinnerStatus="success">
+          <nb-icon icon="save-outline"> </nb-icon>
+          Save dashboard
+        </button>
+      </div>
+    </nb-card-header>
+  </nb-card>
+
+  <div #gridstack gridstack (changeEvent)="handleGridstackChangeEvent($event)">
+    <div grid-item *ngFor="let item of items" [item]="item.gridItem">
+
+      <nb-card style="height: 100%; margin-bottom: 0px;">
+        <nb-card-header style="padding: 0.5rem 1rem;">
+          <div class="d-flex">
+            <span class="mr-auto drag-handle">
+              <nb-icon icon="move-outline" style="height: 100%;"></nb-icon>
+            </span>
+            <button nbButton size="small" ghost class="mr-1">
+              <nb-icon icon="refresh-outline"></nb-icon>
+            </button>
+            <span [nbContextMenu]="item.widgetContextMenu" nbContextMenuTag="widget-context-menu">
+              <nb-icon icon="more-vertical-outline" style="height: 100%;"> </nb-icon>
+            </span>
+          </div>
+
+        </nb-card-header>
+        <nb-card-body #component style="padding-right: 0px; padding-left: 0px;">
+
+          <app-line-chart-widget #components [lineChartWidget]="item.widgetData" [timePeriod]="selectedTimePeriod"
+            [applicationId]="dashboard.applicationId">
+          </app-line-chart-widget>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+
+  <div *ngIf="items.length == 0 && !loading" style="max-height: 200rem; height: 20rem;"
+    class="d-flex justify-content-center align-items-center">
+    <span>
+      Wow! Such emptiness, Maybe add some widgets?
+    </span>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+ol.breadcrumb {
+  background: transparent;
+}
+
+  ol.breadcrumb a {
+    text-decoration: none;
+    /*color: #000;*/
+    font-size: .85rem;
+    font-weight: bold;
+    color: #3699ff !important;
+  }
+
+
+ol .breadcrumb-item.active {
+  color: #8f9bb3;
+  font-size: .85rem;
+}

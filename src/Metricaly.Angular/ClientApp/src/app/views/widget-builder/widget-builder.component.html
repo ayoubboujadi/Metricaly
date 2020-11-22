@@ -1,0 +1,23 @@
+<nb-card>
+  <nb-card-header>
+    <div class="d-flex">
+      <div class="mr-auto">
+        <app-daterange-picker [selectedDaterange]="selectedDaterange"
+          (selectedDaterangeChange)="handleSelectedDaterangeChange($event)">
+
+        </app-daterange-picker>
+      </div>
+
+      <button nbButton status="success" (click)="saveWidget()" [nbSpinner]="savingWidget" nbSpinnerStatus="success">
+        Save Widget
+      </button>
+
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+    <app-line-chart-builder *ngIf="!loading" [applicationId]="applicationId" [(lineChartWidget)]="widgetData"
+      [selectedDaterange]="selectedDaterange">
+    </app-line-chart-builder>
+  </nb-card-body>
+</nb-card>

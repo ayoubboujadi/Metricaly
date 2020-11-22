@@ -1,0 +1,35 @@
+<!--<body>
+  <app-nav-menu></app-nav-menu>
+  <div class="container">
+
+    <alert></alert>
+    <router-outlet></router-outlet>
+
+  </div>
+</body>-->
+
+
+<nb-layout>
+    <nb-layout-header fixed>
+      <div class="d-flex" style="width: 100%;">
+        <div class="mr-auto">
+          <nb-icon class="mr-3" (click)="toggleMenu()" style="font-size: 1.8rem; color: #8f9bb3; cursor: pointer" icon="menu-outline"></nb-icon>
+          <span class="pl-3" style="border-left: 1px solid #edf1f7; font-size: 1.7rem;">Company name</span>
+        </div>
+        <div>another thing</div>
+      </div>
+    </nb-layout-header>
+  
+    <nb-layout-footer></nb-layout-footer>
+  
+    <nb-sidebar responsive="true" [state]="state">
+      <nb-menu [items]="menuItems"></nb-menu>
+    </nb-sidebar>
+  
+    <nb-layout-column style="padding-top: 0.75rem;">
+      <app-sub-header></app-sub-header>
+  
+      <router-outlet></router-outlet>
+    </nb-layout-column>
+  </nb-layout>
+  

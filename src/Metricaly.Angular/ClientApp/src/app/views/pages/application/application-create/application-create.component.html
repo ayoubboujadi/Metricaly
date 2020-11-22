@@ -1,0 +1,45 @@
+
+<nb-card accent="success">
+  <nb-card-header>
+    Create new Application
+  </nb-card-header>
+
+  <nb-card-body>
+    <form [formGroup]="createApplicationForm" (ngSubmit)="onSubmit()">
+      <div class="form-group row">
+        <label for="applicationName" class="col-sm-4 col-m-4 col-form-label label text-nowrap">Application's Name</label>
+        <div class="col-sm-8 col-m-8">
+          <input nbInput fullWidth formControlName="applicationName" type="text" class="form-control" id="applicationName" placeholder="Name" required>
+
+          <div *ngIf="applicationName.invalid && (applicationName.dirty || applicationName.touched)">
+            <div *ngIf="applicationName.errors.required" class="input-error">
+              Name is required.
+            </div>
+            <div *ngIf="applicationName.errors.minlength" class="input-error">
+              Name must be at least 3 characters long.
+            </div>
+            <div *ngIf="applicationName.errors.maxlength" class="input-error">
+              Name cannot be more than 30 characters long.
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </nb-card-body>
+
+  <nb-card-footer>
+    <button nbButton
+            class="float-right"
+            outline
+            size="small"
+            status="success"
+            nbSpinnerStatus="primary"
+            type="submit"
+            (click)="onSubmit()">
+      <nb-icon icon="plus-circle"></nb-icon>
+      Create
+    </button>
+  </nb-card-footer>
+</nb-card>
+

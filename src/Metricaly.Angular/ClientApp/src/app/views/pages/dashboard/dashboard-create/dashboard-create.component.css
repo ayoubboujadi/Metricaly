@@ -1,0 +1,10 @@
+.select-input {
+  padding: 0px;
+  display: block;
+  border: 0px;
+}
+
+
+form {
+  min-width: 40rem;
+}

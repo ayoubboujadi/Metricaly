@@ -1,0 +1,35 @@
+
+
+<div *ngIf="metrics && metrics.length == 0"
+     class="align-items-center d-flex justify-content-center p-5"
+     style="height: 100%;">
+  <span>
+    It seems that you do not have any metrics for this application.
+  </span>
+</div>
+
+
+<table class='table table-light' *ngIf="metrics && metrics.length > 0">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Namespace</th>
+      <th>Metric Name</th>
+      <th>Add to plot</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let metric of metrics">
+      <td>{{ metric.id }}</td>
+      <td>
+        {{ metric.namespace }}
+      </td>
+      <td>
+        {{ metric.name }}
+      </td>
+      <td>
+        <button (click)="addMetricToPlot(metric)" nbButton ghost status="primary"><nb-icon icon="plus-square-outline"></nb-icon></button>
+      </td>
+    </tr>
+  </tbody>
+</table>
