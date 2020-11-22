@@ -32,6 +32,7 @@ import {
   NbSpinnerModule,
   NbTooltipModule,
   NbContextMenuModule,
+  NbAlertModule
 } from '@nebular/theme';
 
 import { NbEvaIconsModule } from '@nebular/eva-icons';
@@ -80,6 +81,7 @@ import { API_BASE_URL } from './web-api-client';
     NbToastrModule.forRoot({ destroyByClick: true }),
     NbTooltipModule,
     NbContextMenuModule,
+    NbAlertModule,
 
     NgxDaterangepickerMd.forRoot(),
 

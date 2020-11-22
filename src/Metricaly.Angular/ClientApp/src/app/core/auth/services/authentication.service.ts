@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { AuthenticateCommand, AuthClient } from '@app/web-api-client';
 import { User } from '../models/user.interface';
 
 @Injectable({ providedIn: 'root' })
@@ -10,7 +10,7 @@ export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
-  constructor(private http: HttpClient) {
+  constructor(private authClient: AuthClient) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -19,14 +19,23 @@ export class AuthenticationService {
     return this.currentUserSubject.value;
   }
 
-  login(email, password) {
-    return this.http.post<any>(`https://localhost:44344/api/auth/SignIn`, { email, password })
-      .pipe(map(user => {
-        // store user details and jwt token in local storage to keep user logged in between page refreshes
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUserSubject.next(user);
-        return user;
-      }));
+  login(email: string, password: string) {
+    const authenticateCommand = AuthenticateCommand.fromJS({ email, password });
+
+    return this.authClient.signIn(authenticateCommand)
+      .pipe(
+        map(result => {
+          const user: User = {
+            email: result.userEmail,
+            id: result.userId,
+            token: result.token,
+            fullName: 'Ayoub'
+          };
+
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+          return user;
+        }));
   }
 
   logout() {

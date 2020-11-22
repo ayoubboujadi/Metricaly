@@ -1,6 +1,14 @@
-
-<div class="account-container">
-    
-    <router-outlet></router-outlet>
-    
-</div>
+<nb-layout>
+    <nb-layout-footer></nb-layout-footer>
+    <nb-layout-column>
+        <alert></alert>
+        <nb-card style="height: calc(100vh - 5 * 2.5rem);">
+            <nb-card-body style="display: flex; width: 100%;">
+                <div style="margin: auto;     display: block; width: 100%; max-width: 35rem;">
+                    
+                    <router-outlet></router-outlet>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </nb-layout-column>
+</nb-layout>

@@ -17,7 +17,6 @@ namespace IntegrationTests.Applications.Commands
 {
     public class CreateApplicationTests
     {
-
         private readonly ApplicationDbContext applicationDbContext;
         private readonly ICreateApplicationService createApplicationService;
         private readonly ICurrentUserService currentUserService;

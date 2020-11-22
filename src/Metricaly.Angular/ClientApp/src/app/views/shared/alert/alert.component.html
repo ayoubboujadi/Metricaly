@@ -1,1 +1,5 @@
-﻿<div *ngIf="message" [ngClass]="message.cssClass">{{message.text}}</div>
+﻿<!-- <div *ngIf="message" [ngClass]="message.cssClass">{{message.text}}</div> -->
+
+<nb-alert *ngIf="message" [status]="message.type" closable (close)='handleAlertClose()'>
+    {{message.text}}
+</nb-alert>

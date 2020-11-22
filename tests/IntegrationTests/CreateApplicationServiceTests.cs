@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IntegrationTests
 {
-    public class Tests
+    public class CreateApplicationServiceTests
     {
         private readonly ApplicationDbContext applicationDbContext;
         private readonly CreateApplicationService createApplicationService;
@@ -16,7 +16,7 @@ namespace IntegrationTests
         private readonly string userId = Guid.NewGuid().ToString();
         private readonly string applicationName = "Test Application Name";
 
-        public Tests()
+        public CreateApplicationServiceTests()
         {
             var dbOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
                   .UseInMemoryDatabase(databaseName: "TestDb")

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{B4A6DAEE-99C1-4520-898C-706B504DE9E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.UnitTests", "tests\UnitTests\Infrastructure.UnitTests.csproj", "{42B2DA6B-EAD2-4633-BD84-E1C0043ED105}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{42B2DA6B-EAD2-4633-BD84-E1C0043ED105}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metricaly.Angular", "src\Metricaly.Angular\Metricaly.Angular.csproj", "{5B0B2656-BEFE-435A-AD65-5F15E4C6F19A}"
 EndProject
@@ -16,6 +16,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metricaly.PublicApi", "src\Metricaly.PublicApi\Metricaly.PublicApi.csproj", "{3D5743A9-0D36-421E-895E-9B713430A385}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playground", "src\Playground\Playground.csproj", "{F246D1D0-EED1-4AE8-9C4A-469DDB1B3978}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4AC04734-EBE2-4823-941C-30F169B38241}"
+	ProjectSection(SolutionItems) = preProject
+		readme.md = readme.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

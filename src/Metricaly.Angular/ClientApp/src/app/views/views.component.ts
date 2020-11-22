@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
-import { NbMenuItem, NbSidebarService } from '@nebular/theme';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NbMenuItem, NbSidebarService, NbMenuService } from '@nebular/theme';
+import { filter, map } from 'rxjs/operators';
+
+import { AuthenticationService } from '@app/core/auth/services';
 import { DashboardClient } from '@app/web-api-client';
 
 @Component({
@@ -8,9 +11,11 @@ import { DashboardClient } from '@app/web-api-client';
   templateUrl: './views.component.html',
   styleUrls: ['./views.component.css']
 })
-export class ViewsComponent {
+export class ViewsComponent implements OnInit {
 
   title = 'app';
+  state = 'expanded';
+
   menuItems: NbMenuItem[] = [
     {
       title: 'Home',
@@ -58,9 +63,14 @@ export class ViewsComponent {
       title: 'Starred Dashboards'
     },
   ];
-  state = 'expanded';
 
-  constructor(private sidebar: NbSidebarService, private dashboardClient: DashboardClient) {
+  profileMenuItems = [
+    { title: 'Profile' },
+    { title: 'Logout' },
+  ];
+
+  constructor(private sidebar: NbSidebarService, private dashboardClient: DashboardClient, private nbMenuService: NbMenuService,
+    private authenticationService: AuthenticationService) {
     const menuState = localStorage.getItem('menuState');
     if (!menuState) {
       localStorage.setItem('menuState', this.state);
@@ -75,6 +85,19 @@ export class ViewsComponent {
           link: 'dashboard/view/' + dashboard.id,
           icon: 'star-outline',
         }));
+      });
+  }
+
+  ngOnInit() {
+    this.nbMenuService.onItemClick()
+      .pipe(
+        filter(({ tag }) => tag === 'user-context-menu'),
+        map(({ item: { title } }) => title),
+      )
+      .subscribe(title => {
+        if (title === 'Logout') {
+          this.logoutUser();
+        }
       });
   }
 
@@ -93,5 +116,9 @@ export class ViewsComponent {
       this.state = 'expanded';
       localStorage.setItem('menuState', 'expanded');
     }
+  }
+
+  logoutUser() {
+    this.authenticationService.logout();
   }
 }

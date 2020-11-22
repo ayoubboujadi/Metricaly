@@ -1,3 +1,4 @@
+import { SwaggerException } from './../../../web-api-client';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -59,11 +60,12 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(this.f.email.value, this.f.password.value)
       .pipe(first())
       .subscribe(
-        data => {
+        (data) => {
           this.router.navigate([this.returnUrl]);
         },
-        error => {
-          this.alertService.error(error);
+        (error: SwaggerException) => {
+          const object = JSON.parse(error.response);
+          this.alertService.error(object.detail);
           this.loading = false;
         });
   }

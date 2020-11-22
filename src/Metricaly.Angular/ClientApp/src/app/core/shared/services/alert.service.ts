@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 
+
 @Injectable({ providedIn: 'root' })
 export class AlertService {
   private subject = new Subject<any>();
@@ -33,7 +34,12 @@ export class AlertService {
 
   error(message: string, keepAfterRouteChange = false) {
     this.keepAfterRouteChange = keepAfterRouteChange;
-    this.subject.next({ type: 'error', text: message });
+    this.subject.next({ type: 'danger', text: message });
+  }
+
+  info(message: string, keepAfterRouteChange = false) {
+    this.keepAfterRouteChange = keepAfterRouteChange;
+    this.subject.next({ type: 'primary', text: message });
   }
 
   clear() {

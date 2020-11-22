@@ -13,6 +13,9 @@ import {
   NbIconModule,
   NbSidebarModule,
   NbMenuModule,
+  NbUserModule,
+  NbContextMenuModule,
+  NbThemeModule
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { RouterModule } from '@angular/router';
@@ -31,11 +34,14 @@ import { ViewsRoutingModule } from './views.routing';
     SharedModule,
 
     NbLayoutModule,
+    NbThemeModule,
     NbButtonModule,
     NbIconModule,
     NbSidebarModule,
     NbMenuModule,
     NbEvaIconsModule,
+    NbUserModule,
+    NbContextMenuModule
   ]
 })
 export class ViewsModule {
