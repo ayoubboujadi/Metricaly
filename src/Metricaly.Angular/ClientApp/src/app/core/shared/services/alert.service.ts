@@ -37,6 +37,11 @@ export class AlertService {
     this.subject.next({ type: 'danger', text: message });
   }
 
+  errors(messages: string[], keepAfterRouteChange = false) {
+    this.keepAfterRouteChange = keepAfterRouteChange;
+    this.subject.next({ type: 'danger', textList: messages });
+  }
+
   info(message: string, keepAfterRouteChange = false) {
     this.keepAfterRouteChange = keepAfterRouteChange;
     this.subject.next({ type: 'primary', text: message });

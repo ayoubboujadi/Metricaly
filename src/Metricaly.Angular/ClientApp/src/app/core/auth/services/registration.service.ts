@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
+import { AuthClient, RegisterCommand } from '@app/web-api-client';
 import { UserRegistration } from '../models/user.registration.interface';
 
 @Injectable({ providedIn: 'root' })
 export class RegistrationService {
-  constructor(private http: HttpClient) { }
+  constructor(private authClient: AuthClient) { }
 
   register(user: UserRegistration) {
-    return this.http.post(`https://localhost:44344/api/auth/signup`, user);
-    //return this.http.post(`${config.apiUrl}/users/register`, user);
-  }
+    const registerCommand = RegisterCommand.fromJS({
+      email: user.email,
+      name: user.fullName,
+      password: user.password
+    });
 
+    return this.authClient.signUp(registerCommand);
+  }
 }

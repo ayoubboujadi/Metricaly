@@ -64,6 +64,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate([this.returnUrl]);
         },
         (error: SwaggerException) => {
+          console.log('login error' + error);
           const object = JSON.parse(error.response);
           this.alertService.error(object.detail);
           this.loading = false;

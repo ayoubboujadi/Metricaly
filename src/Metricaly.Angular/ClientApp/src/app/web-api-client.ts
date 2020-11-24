@@ -127,12 +127,9 @@ export class AuthClient implements IAuthClient {
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob)
-            .pipe(
-                _observableMergeMap(_responseText => {
-                     return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-                 }
-            ));
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
         }
         return _observableOf<AuthenticatedDto>(<any>null);
     }

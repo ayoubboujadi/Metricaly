@@ -1,5 +1,11 @@
-﻿<!-- <div *ngIf="message" [ngClass]="message.cssClass">{{message.text}}</div> -->
-
+﻿
 <nb-alert *ngIf="message" [status]="message.type" closable (close)='handleAlertClose()'>
-    {{message.text}}
+    <div *ngIf="message.text">
+        {{message.text}}
+    </div>
+    <div *ngIf="message.textList">
+           <div *ngFor='let item of message.textList'>
+                {{item}}
+           </div>
+    </div>
 </nb-alert>

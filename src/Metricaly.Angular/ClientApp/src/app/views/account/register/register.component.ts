@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { AuthenticationService, RegistrationService } from '../../../core/auth/services';
 import { AlertService } from '../../../core/shared/services';
 import { MustMatch } from '../../../core/shared/utils';
+import { SwaggerException } from '@app/web-api-client';
 
 
 @Component({
@@ -33,11 +34,11 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
-      email: ['', Validators.required, Validators.email],
+      email: ['', [Validators.required, Validators.email]],
       fullName: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
-    },{
+    }, {
       validator: MustMatch('password', 'confirmPassword')
     });
   }
@@ -60,13 +61,14 @@ export class RegisterComponent implements OnInit {
     this.userService.register(this.registerForm.value)
       .pipe(first())
       .subscribe(
-        data => {
+        (data) => {
           this.alertService.success('Registration successful', true);
           this.router.navigate(['/login']);
         },
-        error => {
-          this.alertService.error(error);
+        (error: SwaggerException) => {
           this.loading = false;
+          const object = JSON.parse(error.response);
+          this.alertService.errors(Object.values(object.errors));
         });
   }
 
