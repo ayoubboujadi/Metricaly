@@ -56,4 +56,10 @@ export class ApplicationComponent implements OnInit {
     this.dialogService.open(ApplicationCreateComponent)
       .onClose.subscribe(appName => appName && this.createApplication(appName));
   }
+
+  handleDeleteApplicationEvent(application) {
+    if (application != null && application !== undefined) {
+      // TODO: Add application delete logic
+    }
+  }
 }

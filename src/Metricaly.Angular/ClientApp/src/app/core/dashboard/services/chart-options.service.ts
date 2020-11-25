@@ -14,7 +14,7 @@ export class ChartOptionsService {
   public getDefaultChartOptions(): EChartOption {
     const chartOption: EChartOption = {
       title: {
-        text: 'This is my chart'
+        //text: 'This is my chart'
       },
 
       textStyle: {
@@ -30,13 +30,13 @@ export class ChartOptionsService {
           }
         }
       },
-      //dataZoom: [
-      //  {
-      //    startValue: '2014-06-01'
-      //  }, {
-      //    type: 'inside'
-      //  }],
-
+      dataZoom: [
+        {
+          type: 'slider'
+        },
+        {
+          type: 'inside'
+        }],
       legend: {
         data: []
       },
@@ -118,22 +118,22 @@ export class ChartOptionsService {
     let labels: number[] = [];
     const widgetSettings = lineChartWidget.widgetSettings;
 
-    if (lineChartWidget !== undefined && lineChartWidget != null && lineChartWidget.plottedMetrics.length !== 0){
+    if (lineChartWidget !== undefined && lineChartWidget != null && lineChartWidget.plottedMetrics.length !== 0) {
       plottedMetrics = lineChartWidget.plottedMetrics;
     }
 
-    if (data !== undefined && data != null && data.plottedMetricsData.length !== 0){
+    if (data !== undefined && data != null && data.plottedMetricsData.length !== 0) {
       plottedMetricsData = data.plottedMetricsData;
     }
 
-    if (data !== undefined && data != null && data.timestamps.length !== 0){
+    if (data !== undefined && data != null && data.timestamps.length !== 0) {
       labels = data.timestamps;
     }
 
     const updateOptions: any = {
-      title: {
-        text: widgetSettings.title
-      },
+      // title: {
+      //   text: widgetSettings.title
+      // },
 
       xAxis: {
         name: widgetSettings.xAxisSettings.label,
@@ -174,13 +174,12 @@ export class ChartOptionsService {
     };
 
 
-    // Set stacked value
+    // Set filled value
     if (widgetSettings.filled) {
       updateOptions.series.forEach(s => s.areaStyle = { opacity: 0.2 });
     } else {
       updateOptions.series.forEach(s => s.areaStyle = null);
     }
-
 
     return updateOptions;
   }

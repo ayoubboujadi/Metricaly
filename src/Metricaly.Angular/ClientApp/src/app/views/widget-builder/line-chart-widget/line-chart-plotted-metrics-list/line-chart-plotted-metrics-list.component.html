@@ -1,7 +1,7 @@
-<table class='table table-light' *ngIf="plottedMetrics">
+<table class='table' *ngIf="plottedMetrics">
   <thead>
     <tr>
-      <th>Id</th>
+      <th>Metric Name / Namespace</th>
       <th>Label</th>
       <th>Color</th>
       <th>YAxis</th>
@@ -11,7 +11,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let metric of plottedMetrics">
-      <td>{{ metric.metricId }}</td>
+      <td>{{ metric.metricName }} / {{metric.namespace}}</td>
       <td>
         <app-editable-field [data]='metric.label' (focusOut)='metric.label = $event; updatePlottedMetrics();'>
         </app-editable-field>

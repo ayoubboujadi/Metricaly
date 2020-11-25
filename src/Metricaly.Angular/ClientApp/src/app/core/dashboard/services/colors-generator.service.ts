@@ -29,14 +29,14 @@ export class ColorsGeneratorService {
     '#ffd8b1',
     '#000075',
     '#a9a9a9'
-  ]
+  ];
 
   public getColor(except: string[] = []): string {
-    var availableColors = this.colors.filter(color => except.indexOf(color) < 0)
+    const availableColors = this.colors.filter(color => except.indexOf(color) < 0);
     if (availableColors.length > 0) {
-      return availableColors[0]
+      return availableColors[0];
     }
 
-    return '#' + (0x1000000 + (Math.random()) * 0xffffff).toString(16).substr(1, 6)
+    return '#' + (0x1000000 + (Math.random()) * 0xffffff).toString(16).substr(1, 6);
   }
 }

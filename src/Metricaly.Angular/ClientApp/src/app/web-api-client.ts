@@ -1536,6 +1536,7 @@ export class ApplicationDto implements IApplicationDto {
     id?: string | undefined;
     name?: string | undefined;
     apiKey?: string | undefined;
+    createdDate!: Date;
     obfuscatedApiKey?: string | undefined;
 
     constructor(data?: IApplicationDto) {
@@ -1552,6 +1553,7 @@ export class ApplicationDto implements IApplicationDto {
             this.id = _data["id"];
             this.name = _data["name"];
             this.apiKey = _data["apiKey"];
+            this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
             this.obfuscatedApiKey = _data["obfuscatedApiKey"];
         }
     }
@@ -1568,6 +1570,7 @@ export class ApplicationDto implements IApplicationDto {
         data["id"] = this.id;
         data["name"] = this.name;
         data["apiKey"] = this.apiKey;
+        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
         data["obfuscatedApiKey"] = this.obfuscatedApiKey;
         return data; 
     }
@@ -1577,6 +1580,7 @@ export interface IApplicationDto {
     id?: string | undefined;
     name?: string | undefined;
     apiKey?: string | undefined;
+    createdDate: Date;
     obfuscatedApiKey?: string | undefined;
 }
 
@@ -2341,14 +2345,14 @@ export interface ILineChartWidget extends IWidgetData {
 }
 
 export class LineChartPlottedMetric implements ILineChartPlottedMetric {
-    metricId!: number;
+    metricId?: string | undefined;
     guid?: string | undefined;
     label?: string | undefined;
     color?: string | undefined;
     metricName?: string | undefined;
     namespace?: string | undefined;
     yAxis?: string | undefined;
-    samplingType?: string | undefined;
+    samplingType!: SamplingType;
 
     constructor(data?: ILineChartPlottedMetric) {
         if (data) {
@@ -2394,18 +2398,17 @@ export class LineChartPlottedMetric implements ILineChartPlottedMetric {
 }
 
 export interface ILineChartPlottedMetric {
-    metricId: number;
+    metricId?: string | undefined;
     guid?: string | undefined;
     label?: string | undefined;
     color?: string | undefined;
     metricName?: string | undefined;
     namespace?: string | undefined;
     yAxis?: string | undefined;
-    samplingType?: string | undefined;
+    samplingType: SamplingType;
 }
 
 export class LineChartWidgetSettings implements ILineChartWidgetSettings {
-    title?: string | undefined;
     legendPosition?: string | undefined;
     displayLegend!: boolean;
     smoothLines!: boolean;
@@ -2425,7 +2428,6 @@ export class LineChartWidgetSettings implements ILineChartWidgetSettings {
 
     init(_data?: any) {
         if (_data) {
-            this.title = _data["title"];
             this.legendPosition = _data["legendPosition"];
             this.displayLegend = _data["displayLegend"];
             this.smoothLines = _data["smoothLines"];
@@ -2445,7 +2447,6 @@ export class LineChartWidgetSettings implements ILineChartWidgetSettings {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["title"] = this.title;
         data["legendPosition"] = this.legendPosition;
         data["displayLegend"] = this.displayLegend;
         data["smoothLines"] = this.smoothLines;
@@ -2458,7 +2459,6 @@ export class LineChartWidgetSettings implements ILineChartWidgetSettings {
 }
 
 export interface ILineChartWidgetSettings {
-    title?: string | undefined;
     legendPosition?: string | undefined;
     displayLegend: boolean;
     smoothLines: boolean;
@@ -2470,8 +2470,6 @@ export interface ILineChartWidgetSettings {
 
 export class LineChartAxisSettings implements ILineChartAxisSettings {
     label?: string | undefined;
-    displayLabel!: boolean;
-    displayGridLines!: boolean;
     min!: number;
     max!: number;
 
@@ -2487,8 +2485,6 @@ export class LineChartAxisSettings implements ILineChartAxisSettings {
     init(_data?: any) {
         if (_data) {
             this.label = _data["label"];
-            this.displayLabel = _data["displayLabel"];
-            this.displayGridLines = _data["displayGridLines"];
             this.min = _data["min"];
             this.max = _data["max"];
         }
@@ -2504,8 +2500,6 @@ export class LineChartAxisSettings implements ILineChartAxisSettings {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["label"] = this.label;
-        data["displayLabel"] = this.displayLabel;
-        data["displayGridLines"] = this.displayGridLines;
         data["min"] = this.min;
         data["max"] = this.max;
         return data; 
@@ -2514,8 +2508,6 @@ export class LineChartAxisSettings implements ILineChartAxisSettings {
 
 export interface ILineChartAxisSettings {
     label?: string | undefined;
-    displayLabel: boolean;
-    displayGridLines: boolean;
     min: number;
     max: number;
 }

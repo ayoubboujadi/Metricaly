@@ -1,5 +1,7 @@
+import { ReactiveFormsModule } from '@angular/forms';
 import { Component, OnInit, Input, ViewChild, TemplateRef, ComponentFactoryResolver, ComponentFactory, ComponentRef, ViewContainerRef } from '@angular/core';
 import { DashboardGridWidget } from '../dashboard.component';
+import { LineChartWidgetComponent } from '@app/views/widgets/line-chart-widget/line-chart-widget.component';
 
 @Component({
   selector: 'app-dashboard-item',
@@ -8,22 +10,48 @@ import { DashboardGridWidget } from '../dashboard.component';
 })
 export class DashboardItemComponent implements OnInit {
 
-  @ViewChild('widgetHost', { read: ViewContainerRef }) private widgetHost: ViewContainerRef;
+  @ViewChild(LineChartWidgetComponent) lineChartWidgetChild: LineChartWidgetComponent;
 
   @Input() item: DashboardGridWidget;
-  selectedTimePeriod: any;
+  @Input() selectedTimePeriod: any;
+  @Input() applicationId: string;
+
+  contextMenuItem: any;
+
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit(): void {
   }
 
-  createComponent<T>(componentFactory: ComponentFactory<T>): ComponentRef<T> {
-    const viewContainerRef = this.widgetHost;
-    viewContainerRef.clear();
+  loadData() {
+    this.lineChartWidgetChild?.loadPlottedMetricsData();
+  }
 
-    const componentRef = viewContainerRef.createComponent<T>(componentFactory);
+  reloadWidget() {
+    console.log('reloaddd')
+   this.lineChartWidgetChild?.hardReloadPlottedMetrics();
+  }
 
-    return componentRef;
+  getWidgetContextMenu() {
+    if (this.contextMenuItem !== null && this.contextMenuItem !== undefined) {
+      return this.contextMenuItem;
+    }
+
+    this.contextMenuItem = [{
+      title: 'Remove from Dashboard',
+      data: {
+        widgetId: this.item.dashboardWidgetId,
+        option: 'delete'
+      }
+    }, {
+      title: 'Edit Widget',
+      data: {
+        widgetId: this.item.dashboardWidgetId,
+        option: 'edit'
+      }
+    }
+    ];
+    return this.contextMenuItem;
   }
 
 }

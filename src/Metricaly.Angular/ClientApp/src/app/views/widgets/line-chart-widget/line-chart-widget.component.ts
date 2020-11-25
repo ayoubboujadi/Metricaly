@@ -15,14 +15,12 @@ export class LineChartWidgetComponent implements OnInit {
   _lineChartWidget: LineChartWidget;
   @Input() set lineChartWidget(value: LineChartWidget) {
     this._lineChartWidget = value;
-    console.log('dashboard lineChartWidget set');
     this.hardReloadPlottedMetrics();
   }
 
 
   _timePeriod: TimePeriod;
   @Input() set timePeriod(value: TimePeriod) {
-    console.log('dashboard timePeriod set');
     this._timePeriod = value;
     this.hardReloadPlottedMetrics();
   }

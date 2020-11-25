@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NbMenuItem, NbSidebarService, NbMenuService } from '@nebular/theme';
 import { filter, map } from 'rxjs/operators';
 
 import { AuthenticationService } from '@app/core/auth/services';
 import { DashboardClient } from '@app/web-api-client';
+import { DashboardFavoriteService } from '@app/core/dashboard/services/dashboard-favorite.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-views',
   templateUrl: './views.component.html',
   styleUrls: ['./views.component.css']
 })
-export class ViewsComponent implements OnInit {
+export class ViewsComponent implements OnInit, OnDestroy {
 
-  title = 'app';
   state = 'expanded';
 
   menuItems: NbMenuItem[] = [
@@ -60,7 +61,7 @@ export class ViewsComponent implements OnInit {
     },
     {
       group: true,
-      title: 'Starred Dashboards'
+      title: 'Starred Dashboards',
     },
   ];
 
@@ -69,8 +70,11 @@ export class ViewsComponent implements OnInit {
     { title: 'Logout' },
   ];
 
+  private subscription: Subscription;
+
+
   constructor(private sidebar: NbSidebarService, private dashboardClient: DashboardClient, private nbMenuService: NbMenuService,
-    private authenticationService: AuthenticationService) {
+    private authenticationService: AuthenticationService, private dashboardFavoriteService: DashboardFavoriteService) {
     const menuState = localStorage.getItem('menuState');
     if (!menuState) {
       localStorage.setItem('menuState', this.state);
@@ -78,15 +82,10 @@ export class ViewsComponent implements OnInit {
       this.state = menuState;
     }
 
-    this.dashboardClient.getFavoriteList()
-      .subscribe((result) => {
-        result.forEach(dashboard => this.menuItems.push({
-          title: dashboard.name,
-          link: 'dashboard/view/' + dashboard.id,
-          icon: 'star-outline',
-        }));
-      });
+    this.loadFavoriteDashboards();
   }
+
+
 
   ngOnInit() {
     this.nbMenuService.onItemClick()
@@ -99,7 +98,31 @@ export class ViewsComponent implements OnInit {
           this.logoutUser();
         }
       });
+
+
+    this.subscription = this.dashboardFavoriteService.getSubscription()
+      .subscribe(() => {
+        this.loadFavoriteDashboards();
+      });
   }
+
+  loadFavoriteDashboards() {
+    // remove old items if any
+    const firstIndex = this.menuItems.findIndex(x => x.icon === 'star-outline');
+    if (firstIndex !== -1) {
+      this.menuItems.splice(firstIndex);
+    }
+
+    this.dashboardClient.getFavoriteList()
+      .subscribe((result) => {
+        result.forEach(dashboard => this.menuItems.push({
+          title: dashboard.name,
+          link: '/dashboard/view/' + dashboard.id,
+          icon: 'star-outline',
+        }));
+      });
+  }
+
 
   // For root animations
   prepareRoute(outlet: RouterOutlet) {
@@ -120,5 +143,9 @@ export class ViewsComponent implements OnInit {
 
   logoutUser() {
     this.authenticationService.logout();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

@@ -62,8 +62,8 @@ export class RegisterComponent implements OnInit {
       .pipe(first())
       .subscribe(
         (data) => {
-          this.alertService.success('Registration successful', true);
-          this.router.navigate(['/login']);
+          this.alertService.success('Registration successful!', true);
+          this.router.navigate(['account/login']);
         },
         (error: SwaggerException) => {
           this.loading = false;
@@ -71,5 +71,4 @@ export class RegisterComponent implements OnInit {
           this.alertService.errors(Object.values(object.errors));
         });
   }
-
 }

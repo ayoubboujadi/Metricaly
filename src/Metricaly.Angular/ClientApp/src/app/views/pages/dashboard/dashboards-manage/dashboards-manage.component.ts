@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { NbDialogService } from '@nebular/theme';
+import { NbDialogService, NbToastrService, NbGlobalPhysicalPosition } from '@nebular/theme';
+
 import { DashboardDto, ApplicationDto, DashboardClient, ApplicationClient, FavoriteDashboardCommand } from '@app/web-api-client';
 import { ConfirmDialogComponent } from '@app/views/shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { DashboardFavoriteService } from '@app/core/dashboard/services/dashboard-favorite.service';
 
 @Component({
   selector: 'app-dashboards-manage',
@@ -17,7 +19,8 @@ export class DashboardsManageComponent implements OnInit {
   dashboards: DashboardDto[];
 
   constructor(private applicationClient: ApplicationClient, private dashboardClient: DashboardClient,
-    private dialogService: NbDialogService) {
+    private dialogService: NbDialogService, private toastrService: NbToastrService,
+    private dashboardFavoriteService: DashboardFavoriteService) {
     this.loadApplications();
   }
 
@@ -76,6 +79,8 @@ export class DashboardsManageComponent implements OnInit {
         this.dashboardClient.delete(dashboard.id)
           .subscribe(
             (result) => {
+              this.toastrService.show('Success', 'Dashboard was deleted!',
+                { position: NbGlobalPhysicalPosition.TOP_RIGHT, status: 'basic', icon: 'trash-2-outline', 'iconPack': 'eva' });
               this.loadDashboards();
             },
             (error) => {
@@ -92,6 +97,7 @@ export class DashboardsManageComponent implements OnInit {
     this.dashboardClient.addFavorite(FavoriteDashboardCommand.fromJS({ dashboardId: dashboard.id, isFavorite: dashboard.isFavorite }))
       .subscribe(
         (result) => {
+          this.dashboardFavoriteService.favoritesChanged();
         },
         (error) => {
           console.error(error);

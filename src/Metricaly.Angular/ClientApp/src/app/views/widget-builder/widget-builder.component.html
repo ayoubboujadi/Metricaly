@@ -1,15 +1,16 @@
-<nb-card>
+<nb-card style="width: 90vw; height: 95vh">
   <nb-card-header>
     <div class="d-flex">
       <div class="mr-auto">
         <app-daterange-picker [selectedDaterange]="selectedDaterange"
           (selectedDaterangeChange)="handleSelectedDaterangeChange($event)">
-
         </app-daterange-picker>
       </div>
 
-      <button nbButton status="success" (click)="saveWidget()" [nbSpinner]="savingWidget" nbSpinnerStatus="success">
+      <button nbButton size="small" status="success" (click)="saveWidget()" [disabled]="savingWidget"
+         nbSpinnerStatus="success">
         Save Widget
+        <nb-icon icon="checkmark-outline"> </nb-icon>
       </button>
 
     </div>

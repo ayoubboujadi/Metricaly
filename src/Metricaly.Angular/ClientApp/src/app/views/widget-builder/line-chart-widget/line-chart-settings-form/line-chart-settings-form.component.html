@@ -5,16 +5,8 @@
 
       <div class="col-sm-6">
         <nb-card>
-          <nb-card-header>Generat settings</nb-card-header>
+          <nb-card-header>General settings</nb-card-header>
           <nb-card-body>
-
-            <div class="form-group">
-              <label for="widgetName" class="label">Widget name</label>
-              <input type="text" class="input-full-width" nbInput formControlName="widgetName" placeholder="Widget name">
-            </div>
-            <div>
-              <nb-toggle formControlName="displayTitle">Show Widget Name as Title</nb-toggle>
-            </div>
             <div>
               <nb-toggle formControlName="displayLegend">Show Legend</nb-toggle>
             </div>
@@ -22,7 +14,7 @@
               <nb-toggle formControlName="smoothLines">Smooth Graph Lines</nb-toggle>
             </div>
             <div>
-              <nb-toggle formControlName="stacked">Stacked</nb-toggle>
+              <nb-toggle formControlName="filled">Filled</nb-toggle>
             </div>
           </nb-card-body>
         </nb-card>
@@ -35,15 +27,7 @@
             <div formGroupName="xAxis">
               <div class="form-group">
                 <label for="label" class="label">Label</label>
-                <input type="text" class="input-full-width" nbInput formControlName="label" placeholder="Enter a X Axis label">
-              </div>
-
-              <div>
-                <nb-toggle formControlName="displayLabel">Show Label</nb-toggle>
-              </div>
-
-              <div>
-                <nb-toggle formControlName="displayGridLines">Show Gridlines</nb-toggle>
+                <input type="text" class="input-full-width" nbInput fieldSize="small" formControlName="label" placeholder="Enter a X Axis label">
               </div>
             </div>
           </nb-card-body>

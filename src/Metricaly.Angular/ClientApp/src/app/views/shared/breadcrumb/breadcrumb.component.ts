@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, ActivatedRoute, Router } from '@angular/router';
+import { NavigationEnd, ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -18,8 +18,8 @@ export class BreadcrumbComponent implements OnInit {
 
   ngOnInit(): void {
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe(() => {
         this.breadcrumbItems = this.createBreadcrumbs(this.activatedRoute.root);
         if (this.breadcrumbItems.length > 0) {
           this.breadcrumbItems[this.breadcrumbItems.length - 1].isUrl = false;

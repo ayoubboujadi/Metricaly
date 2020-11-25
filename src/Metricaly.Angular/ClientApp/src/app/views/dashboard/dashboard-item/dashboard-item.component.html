@@ -3,21 +3,21 @@
     <div class="d-flex">
       <span class="mr-auto drag-handle">
         <nb-icon icon="move-outline" style="height: 100%;"></nb-icon>
+        <span class="ml-3">{{item.widgetName}}</span>
       </span>
-      <button nbButton size="small" ghost class="mr-1">
+      <button nbButton size="small" ghost class="mr-1" (click)='reloadWidget()'>
         <nb-icon icon="refresh-outline"></nb-icon>
       </button>
-      <span [nbContextMenu]="item.widgetContextMenu" nbContextMenuTag="widget-context-menu">
-        <nb-icon icon="more-vertical-outline" style="height: 100%;"> </nb-icon>
+      <span [nbContextMenu]="getWidgetContextMenu()" nbContextMenuTag="widget-context-menu">
+        <nb-icon icon="more-vertical-outline" style="height: 100%;"></nb-icon>
       </span>
     </div>
 
   </nb-card-header>
   <nb-card-body #component style="padding-right: 0px; padding-left: 0px;">
 
-    <app-line-chart-widget #components
-                           [lineChartWidget]="item.widgetData"
-                           [timePeriod]="selectedTimePeriod">
+    <app-line-chart-widget #lineChartWidgetChild [lineChartWidget]="item.widgetData" [timePeriod]="selectedTimePeriod"
+      [applicationId]="applicationId">
     </app-line-chart-widget>
   </nb-card-body>
 </nb-card>

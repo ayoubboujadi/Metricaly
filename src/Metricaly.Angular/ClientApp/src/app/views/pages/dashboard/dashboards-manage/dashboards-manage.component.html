@@ -29,6 +29,14 @@
       </thead>
 
       <tbody>
+        <tr *ngIf="dashboards && dashboards.length == 0">
+          <td colspan="5">
+            <div class="justify-content-center d-flex">
+              <span>There are no Dashboards for the selected Application.</span>
+            </div>
+          </td>
+        </tr>
+
         <tr *ngFor="let dashboard of dashboards">
           <td>{{dashboard.name}}</td>
           <td>{{dashboard.dashboardWidgetsCount}}</td>

@@ -40,7 +40,7 @@ namespace Metricaly.Infrastructure.Widgets.Queries.GetWidgetType
             var dbWidget = await (from application in context.Applications
                                 join widget in context.Widgets
                                 on application.Id equals widget.ApplicationId
-                                where widget.Id == widget.Id && application.UserId == currentUserId
+                                where widget.Id == request.WidgetId && application.UserId == currentUserId
                                 select widget)
                                 .FirstOrDefaultAsync();
 

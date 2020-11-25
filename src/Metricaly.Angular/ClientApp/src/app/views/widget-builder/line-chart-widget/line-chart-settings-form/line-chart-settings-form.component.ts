@@ -24,15 +24,11 @@ export class LineChartSettingsFormComponent implements OnInit {
   submitButtonDisabled = true;
 
   widgetSettingsForm = this.fb.group({
-    widgetName: [''],
-    displayTitle: [null],
     displayLegend: [null],
     smoothLines: [null],
-    stacked: [null],
+    filled: [null],
     xAxis: this.fb.group({
       label: [''],
-      displayLabel: [null],
-      displayGridLines: [null]
     }),
     yAxisLeft: this.fb.group({
       label: [''],
@@ -55,15 +51,11 @@ export class LineChartSettingsFormComponent implements OnInit {
   onSubmit() {
 
     const settings = LineChartWidgetSettings.fromJS({
-      title: this.widgetSettingsForm.get('widgetName').value,
-      displayTitle: this.widgetSettingsForm.get('displayTitle').value,
       displayLegend: this.widgetSettingsForm.get('displayLegend').value,
       smoothLines: this.widgetSettingsForm.get('smoothLines').value,
-      stacked: this.widgetSettingsForm.get('stacked').value,
+      filled: this.widgetSettingsForm.get('filled').value,
       xAxisSettings: {
         label: this.widgetSettingsForm.get(['xAxis', 'label']).value,
-        displayLabel: this.widgetSettingsForm.get(['xAxis', 'displayLabel']).value,
-        displayGridLines: this.widgetSettingsForm.get(['xAxis', 'displayGridLines']).value,
       },
       yLeftAxisSettings: {
         label: this.widgetSettingsForm.get(['yAxisLeft', 'label']).value
@@ -79,15 +71,11 @@ export class LineChartSettingsFormComponent implements OnInit {
 
   updateFormValues() {
     this.widgetSettingsForm.patchValue({
-      widgetName: this.settings.title,
-      displayTitle: this.settings.title,
       displayLegend: this.settings.displayLegend,
       smoothLines: this.settings.smoothLines,
-      stacked: this.settings.filled,
+      filled: this.settings.filled,
       xAxis: {
-        label: this.settings.xAxisSettings.label,
-        displayLabel: this.settings.xAxisSettings.displayLabel,
-        displayGridLines: this.settings.xAxisSettings.displayGridLines
+        label: this.settings.xAxisSettings.label
       },
       yAxisLeft: {
         label: this.settings.yLeftAxisSettings.label,
@@ -100,7 +88,7 @@ export class LineChartSettingsFormComponent implements OnInit {
 
   resetFormValues() {
     this.submitButtonDisabled = true;
-    this.updateFormValues()
+    this.updateFormValues();
   }
 
 }

@@ -37,7 +37,7 @@
       </span>
     </div>
 
-    <div class="float-right" *ngIf="hasPlottedMetrics()">
+    <div class="float-right mb-2" *ngIf="hasPlottedMetrics()">
       <nb-select placeholder="Sampling value" [(ngModel)]="this.lineChartWidget.samplingTime" (ngModelChange)="handleSamplingTimeChanged($event)">
         <nb-select-label>
           Sampling time: {{ this.lineChartWidget.samplingTime }}

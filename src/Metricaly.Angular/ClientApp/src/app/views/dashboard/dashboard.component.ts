@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, ViewChildren, QueryList, ComponentFactoryResolver, OnDestroy } from '@angular/core';
+import { DashboardItemComponent } from './dashboard-item/dashboard-item.component';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, ComponentFactoryResolver, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NbDialogService, NbMenuService } from '@nebular/theme';
 import * as moment from 'moment';
@@ -12,6 +13,7 @@ import { ArrayExtension } from '@app/core/shared/utils/groupby';
 import { WidgetsOverviewComponent } from './widgets-overview/widgets-overview.component';
 import { GuidGenerator } from '@app/core/shared/utils/guid-generator';
 import { Item } from './grid-item/grid-item.component';
+import { WidgetBuilderComponent } from './../widget-builder/widget-builder.component';
 import { WidgetBuilderService } from './../widget-builder/widget-builder.service';
 import { DashboardDto, DashboardClient, WidgetClient, DashboardWidget, UpdateDashboardCommand, WidgetDto } from '@app/web-api-client';
 
@@ -23,6 +25,7 @@ export class WidgetContextMenuData {
 export class DashboardGridWidget {
   public widgetId: string;
   public widgetType: string;
+  public widgetName: string;
   public dashboardWidgetId: string | null;
   public gridItem: Item;
   public widgetContextMenu: any;
@@ -39,7 +42,7 @@ export class DashboardGridWidget {
 export class DashboardComponent implements OnInit, OnDestroy {
 
   @ViewChild(GridComponent, { static: true }) stackgrid: GridComponent;
-  @ViewChildren('components') components: QueryList<LineChartWidgetComponent>;
+  @ViewChildren('dashboarditem') components: QueryList<DashboardItemComponent>;
 
   requiresSaving = false;
   loading = true;
@@ -53,12 +56,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(private dashboardClient: DashboardClient, private widgetClient: WidgetClient,
     private dialogService: NbDialogService, private route: ActivatedRoute, private nbMenuService: NbMenuService,
-    private widgetService: WidgetBuilderService) {
+    private widgetService: WidgetBuilderService, private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this.loading = true;
     this.route.paramMap.subscribe(params => {
+      this.loading = true;
+      this.items = [];
+      this.dashboard = null;
+      this.requiresSaving = false;
+      this.cdr.detectChanges();
+
       const dashboardId = params.get('dashboardId');
       this.dashboardClient.get(dashboardId).subscribe(dashboardDetails => {
         this.dashboard = dashboardDetails.dashboard;
@@ -70,7 +78,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           item.requiresDataLoading = true;
           item.widgetId = dashboardWidget.widgetId;
           item.widgetType = dashboardWidget.widgetType;
-          item.widgetContextMenu = this.getWidgetContextMenu(dashboardWidget.id);
+          // item.widgetContextMenu = this.getWidgetContextMenu(item.dashboardWidgetId);
           item.gridItem = {
             el: null,
             autoPosition: false,
@@ -110,7 +118,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this.timer = setInterval(() => {
       this.components.forEach(x => {
-        x?.loadPlottedMetricsData();
+        x?.loadData();
       });
     }, 2000);
   }
@@ -149,10 +157,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
           widgetsArray.reduce((accumulator, value) => accumulator.concat(value), []);
 
         dashboardWidgetsToLoad.forEach(dashboardWidget => {
-          console.log(JSON.stringify(dashboardWidget));
-          console.log(JSON.stringify(widgets));
           const widgetResult = widgets.find(x => x.widget.id === dashboardWidget.widgetId);
           dashboardWidget.widgetData = widgetResult.widgetData;
+          dashboardWidget.widgetName = widgetResult.widget.name;
           dashboardWidget.requiresDataLoading = false;
         });
 
@@ -237,7 +244,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           item.requiresDataLoading = true;
           item.widgetId = newWidget.id;
           item.widgetType = newWidget.type;
-          item.widgetContextMenu = this.getWidgetContextMenu(item.dashboardWidgetId);
+          // item.widgetContextMenu = this.getWidgetContextMenu(item.dashboardWidgetId);
           item.gridItem = {
             el: null,
             autoPosition: false,
@@ -256,32 +263,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  getWidgetContextMenu(widgetId: string) {
-    return [{
-      title: 'Remove from Dashboard',
-      data: {
-        widgetId: widgetId,
-        option: 'delete'
-      }
-    }, {
-      title: 'Edit Widget',
-      data: {
-        widgetId: widgetId,
-        option: 'edit'
-      }
-    }
-    ];
-  }
-
-  deleteWidget(widgetId: string): void {
-    const itemIndex = this.items.findIndex(x => x.gridItem.id === widgetId);
+  deleteWidget(dashboardWidgetId: string): void {
+    const itemIndex = this.items.findIndex(x => x.dashboardWidgetId === dashboardWidgetId);
     if (itemIndex > -1) {
       this.items.splice(itemIndex, 1);
       this.requiresSaving = true;
     }
   }
 
-  editWidget(widgetId: string): void {
-
+  editWidget(dashboardWidgetId: string): void {
+    const dashboardGridWidget = this.items.find(x => x.dashboardWidgetId === dashboardWidgetId);
+    console.log('edit: ' + dashboardWidgetId);
+    console.log(dashboardGridWidget);
+    if (dashboardGridWidget !== null && dashboardGridWidget !== undefined) {
+      this.dialogService.open(WidgetBuilderComponent, {
+        context: {
+          widgetId: dashboardGridWidget.widgetId
+        },
+      }).onClose.subscribe((thereAreChanges: boolean) => {
+        dashboardGridWidget.requiresDataLoading = true;
+        this.loadDashboardWidgetsData();
+        // const component = this.components.find(x => x.item.dashboardWidgetId === dashboardWidgetId);
+        // component.reloadWidget();
+      });
+    }
   }
 }

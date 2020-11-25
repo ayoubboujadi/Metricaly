@@ -19,7 +19,6 @@ export class WidgetsOverviewComponent implements OnInit {
 
   constructor(private widgetClient: WidgetClient, private toastrService: NbToastrService,
     protected dialogRef: NbDialogRef<WidgetsOverviewComponent>) {
-
   }
 
   ngOnInit(): void {
@@ -42,5 +41,9 @@ export class WidgetsOverviewComponent implements OnInit {
 
   save() {
     this.dialogRef.close(this.addedWidgets);
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 }

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NbToastrService, NbGlobalPhysicalPosition } from '@nebular/theme';
+
 import { ApplicationClient, WidgetClient, ApplicationDto, WidgetDto, CreateWidgetCommand } from '@app/web-api-client';
 
 @Component({
@@ -19,7 +21,8 @@ export class WidgetCreateComponent implements OnInit {
   widgetType: string;
   defaultChoice = 'LineChart';
 
-  constructor(private router: Router, private applicationDataService: ApplicationClient, private widgetService: WidgetClient) { }
+  constructor(private router: Router, private applicationDataService: ApplicationClient, private widgetService: WidgetClient,
+    private toastrService: NbToastrService) { }
 
   ngOnInit(): void {
     this.loadApplications();
@@ -64,6 +67,8 @@ export class WidgetCreateComponent implements OnInit {
     this.widgetService.create(widget)
       .subscribe(
         (result) => {
+          this.toastrService.show('Success', 'Widget was created successfully!',
+          { position: NbGlobalPhysicalPosition.TOP_RIGHT, status: 'success' });
           this.router.navigate(['widget-builder/line-chart', result]);
         },
         (error) => {
@@ -72,7 +77,7 @@ export class WidgetCreateComponent implements OnInit {
       );
   }
 
-  choose(event){
+  choose(event) {
     console.log('type changed: ' + event);
   }
 }

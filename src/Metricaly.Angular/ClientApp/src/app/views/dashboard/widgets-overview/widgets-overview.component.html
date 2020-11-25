@@ -1,19 +1,16 @@
-
-
-<nb-card [nbSpinner]="loading"
-     nbSpinnerStatus="primary"
-     nbSpinnerSize="giant">
+<nb-card [nbSpinner]="loading" style="width: 60vw; height: 60vh" nbSpinnerStatus="primary" nbSpinnerSize="giant">
   <nb-card-header class="d-flex">
-    <span  class="mr-auto">
+    <span class="mr-auto">
       Application ..... widgets
     </span>
 
-    <button nbButton ghost><nb-icon icon="close-circle-outline"></nb-icon></button>
+    <button nbButton ghost (click)='close()'>
+      <nb-icon icon="close-circle-outline"></nb-icon>
+    </button>
   </nb-card-header>
 
   <nb-card-body>
-
-    <table class="table-light table">
+    <table class="table">
       <thead>
         <tr>
           <th>Widget Name</th>
@@ -24,10 +21,19 @@
       </thead>
 
       <tbody>
+        <tr *ngIf="widgets && widgets.length == 0">
+          <td colspan="4">
+            <div class="justify-content-center d-flex">
+              <span>You have no Widgets, try creating a new Widget for this application!</span>
+            </div>
+          </td>
+        </tr>
         <tr *ngFor="let widget of widgets">
           <td>{{widget.name}}</td>
           <td>{{widget.type}}</td>
-          <td><button nbButton ghost status="success" (click)="addWidget(widget)"><nb-icon icon="plus-square-outline"></nb-icon></button></td>
+          <td><button nbButton ghost status="success" (click)="addWidget(widget)">
+              <nb-icon icon="plus-square-outline"></nb-icon>
+            </button></td>
           <td>
             <nb-badge text="yes" status="success" position="relative" style="font-size: 12px;"></nb-badge>
           </td>

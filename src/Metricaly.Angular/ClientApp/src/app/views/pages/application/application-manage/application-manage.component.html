@@ -3,7 +3,7 @@
 </div>
 
 
-<table class="table" *ngIf="applications">
+<table *ngIf="applications && applications.length > 0" class="table">
   <thead>
     <tr>
       <th>Application Name</th>
@@ -15,7 +15,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let application of applications">
-      <td>{{application.id}}</td>
+      <td>{{application.name}}</td>
       <td>
         {{application.obfuscatedApiKey}}
 
@@ -24,7 +24,7 @@
           <nb-icon icon="copy-outline"></nb-icon>
         </button>
       </td>
-      <td>{{application.createdDate | date}}</td>
+      <td>{{application.createdDate | date:'medium' }}</td>
       <td>
         <button nbButton nbTooltip="Delete application" nbTooltipPlacement="top" nbTooltipStatus="warning"
           status="warning" size="small" class="ml-3" (click)="deleteApplication(application)">

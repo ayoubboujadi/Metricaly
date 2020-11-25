@@ -20,14 +20,14 @@ namespace Metricaly.Infrastructure
         {
             services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(conf["RedisHost"]));
 
-            services.AddDbContext<AppIdentityDbContext>(options =>
-                options.UseNpgsql(conf.GetConnectionString("IdentityConnection")));
+            //services.AddDbContext<AppIdentityDbContext>(options =>
+            //    options.UseNpgsql(conf.GetConnectionString("IdentityConnection")));
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(conf.GetConnectionString("ApplicationConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                  .AddEntityFrameworkStores<AppIdentityDbContext>()
+                  .AddEntityFrameworkStores<ApplicationDbContext>()
                   .AddDefaultTokenProviders();
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
