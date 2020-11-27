@@ -40,7 +40,7 @@
         <tr *ngFor="let dashboard of dashboards">
           <td>{{dashboard.name}}</td>
           <td>{{dashboard.dashboardWidgetsCount}}</td>
-          <td>{{dashboard.createdDate | date}}</td>
+          <td>{{dashboard.createdDate | date:'medium' }}</td>
           <td>
             <a nbButton nbTooltip="View dashboard" nbTooltipPlacement="top" nbTooltipStatus="info" status="info"
               size="small" [routerLink]="['/dashboard/view', dashboard.id]">

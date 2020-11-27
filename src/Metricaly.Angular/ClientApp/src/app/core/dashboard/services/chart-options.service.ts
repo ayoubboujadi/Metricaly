@@ -163,13 +163,18 @@ export class ChartOptionsService {
 
       series: plottedMetricsData.map(metricData => ({
         yAxisIndex: plottedMetrics.find(x => x.guid === metricData.metricGuid).yAxis === 'left' ? 0 : 1,
+        type: 'line',
         data: this.mapData(metricData, labels),
         name: plottedMetrics.find(x => x.guid === metricData.metricGuid).label,
-        type: 'line',
         id: metricData.metricGuid,
         //showSymbol: false,
         color: plottedMetrics.find(x => x.guid === metricData.metricGuid).color,
-        smooth: widgetSettings.smoothLines
+        smooth: widgetSettings.smoothLines,
+        markLine: {
+          data: [
+            { name: 'Max value', yAxis: 10000 }
+          ],
+        }
       }))
     };
 

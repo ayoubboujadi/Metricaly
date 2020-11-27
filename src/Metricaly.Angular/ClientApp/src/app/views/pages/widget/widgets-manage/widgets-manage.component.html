@@ -39,7 +39,7 @@
         <tr *ngFor="let widget of widgets">
           <td>{{widget.name}}</td>
           <td>{{widget.type}}</td>
-          <td>Add date later</td>
+          <td>{{widget.createdDate | date:'medium' }}</td>
           <td>
             <a nbButton nbTooltip="Edit widget" nbTooltipPlacement="top" nbTooltipStatus="info" status="info"
               size="small" [routerLink]="['/widget-builder/line-chart', widget.id]">

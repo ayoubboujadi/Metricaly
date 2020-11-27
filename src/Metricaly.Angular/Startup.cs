@@ -3,6 +3,7 @@ using Metricaly.Angular.Filters;
 using Metricaly.Angular.Services;
 using Metricaly.Core.Interfaces;
 using Metricaly.Core.Widgets.LineChartWidget;
+using Metricaly.Core.Widgets.SimpleNumber;
 using Metricaly.Infrastructure;
 using Metricaly.Infrastructure.Applications.Commands.CreateApplication;
 using Metricaly.Infrastructure.Widgets.Commands.UpdateWidget;
@@ -40,6 +41,7 @@ namespace Metricaly.Angular
 
             services.AddMediatR(typeof(CreateApplicationCommand).Assembly);
             services.AddTransient<IRequestHandler<UpdateWidgetCommand<LineChartWidget>, Unit>, UpdateWidgetCommandHandler<LineChartWidget>>();
+            services.AddTransient<IRequestHandler<UpdateWidgetCommand<SimpleNumberWidget>, Unit>, UpdateWidgetCommandHandler<SimpleNumberWidget>>();
 
             services.AddTransient<
                 IRequestHandler<
@@ -47,6 +49,13 @@ namespace Metricaly.Angular
                     List<WidgetDetailsVm<LineChartWidget>>
                     >,
                 GetWidgetsQueryHandler<LineChartWidget>
+                >();
+            services.AddTransient<
+                IRequestHandler<
+                    GetWidgetsQuery<SimpleNumberWidget>,
+                    List<WidgetDetailsVm<SimpleNumberWidget>>
+                    >,
+                GetWidgetsQueryHandler<SimpleNumberWidget>
                 >();
 
             var key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("Jwt:Secret"));

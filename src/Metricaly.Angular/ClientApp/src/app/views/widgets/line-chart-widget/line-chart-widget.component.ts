@@ -4,17 +4,19 @@ import { ChartOptionsService, LineChartData, PlottedMetricData } from '@app/core
 import { LineSeriesData } from '@app/core/dashboard/services/line-series-data.service';
 import { TimePeriod } from '@app/core/shared/models/timeperiod.model';
 import { LineChartWidget, MetricClient, GetMetricTimeSeriesQuery, MetricNamespaceDTO } from '@app/web-api-client';
+import { WidgetComponent } from '../widget-component.interface';
 
 @Component({
   selector: 'app-line-chart-widget',
   templateUrl: './line-chart-widget.component.html',
-  styleUrls: ['./line-chart-widget.component.css']
+  styleUrls: ['./line-chart-widget.component.css'],
+  providers: [ {provide: WidgetComponent, useExisting: LineChartWidgetComponent }]
 })
-export class LineChartWidgetComponent implements OnInit {
+export class LineChartWidgetComponent implements WidgetComponent, OnInit {
 
-  _lineChartWidget: LineChartWidget;
-  @Input() set lineChartWidget(value: LineChartWidget) {
-    this._lineChartWidget = value;
+  _widgetData: LineChartWidget;
+  @Input() set widgetData(value: LineChartWidget) {
+    this._widgetData = value;
     this.hardReloadPlottedMetrics();
   }
 
@@ -45,7 +47,7 @@ export class LineChartWidgetComponent implements OnInit {
 
   updateChart() {
     // Update the chart
-    this.updateOptions = this.chartOptionsService.getUpdateChartOptions(this.data, this._lineChartWidget);
+    this.updateOptions = this.chartOptionsService.getUpdateChartOptions(this.data, this._widgetData);
   }
 
   updateDataOnly() {
@@ -62,14 +64,13 @@ export class LineChartWidgetComponent implements OnInit {
     }
   }
 
-
   parseRequest(): GetMetricTimeSeriesQuery {
     return GetMetricTimeSeriesQuery.fromJS({
       startTimestamp: this._timePeriod.start,
       endTimestamp: this._timePeriod.end,
-      samplingTime: this._lineChartWidget.samplingTime,
+      samplingTime: this._widgetData.samplingTime,
       applicationId: this.applicationId,
-      metrics: this._lineChartWidget.plottedMetrics?.map(x => {
+      metrics: this._widgetData.plottedMetrics?.map(x => {
         return MetricNamespaceDTO.fromJS({
           guid: x.guid,
           metricName: x.metricName,
@@ -81,8 +82,8 @@ export class LineChartWidgetComponent implements OnInit {
   }
 
   loadPlottedMetricsData() {
-    if (this._lineChartWidget?.plottedMetrics && this._lineChartWidget.plottedMetrics?.length !== 0 && this._timePeriod) {
-      this.metricClient.getMetricValues(this.parseRequest())
+    if (this._widgetData?.plottedMetrics && this._widgetData.plottedMetrics?.length !== 0 && this._timePeriod) {
+      this.metricClient.getTimeSeries(this.parseRequest())
         .subscribe(result => {
           this.data.plottedMetricsData = result.values.map(x => {
             const data = new PlottedMetricData;
@@ -97,9 +98,9 @@ export class LineChartWidgetComponent implements OnInit {
   }
 
   hardReloadPlottedMetrics() {
-    if (this._lineChartWidget?.plottedMetrics && this._lineChartWidget?.plottedMetrics.length !== 0 && this._timePeriod) {
+    if (this._widgetData?.plottedMetrics && this._widgetData?.plottedMetrics.length !== 0 && this._timePeriod) {
       this.loading = true;
-      this.metricClient.getMetricValues(this.parseRequest())
+      this.metricClient.getTimeSeries(this.parseRequest())
         .subscribe(result => {
 
           this.data.plottedMetricsData = result.values.map(x => {
@@ -114,6 +115,5 @@ export class LineChartWidgetComponent implements OnInit {
         });
     }
   }
+
 }
-
-

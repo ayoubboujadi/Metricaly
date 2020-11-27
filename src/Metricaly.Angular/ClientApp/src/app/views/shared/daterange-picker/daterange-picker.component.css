@@ -15,3 +15,7 @@
 .button-group button:not(:first-child):not(:last-child) {
   border-radius: 0px;
 }
+
+.button-group button {
+  padding: 7px 7px !important; 
+}

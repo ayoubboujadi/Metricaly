@@ -18,6 +18,8 @@ namespace Metricaly.Infrastructure.WidgetHandlers
             {
                 case WidgetType.LineChart:
                     return new LineChartWidgetHandler();
+                case WidgetType.SimpleNumber:
+                    return new SimpleNumberWidgetHandler();
                 default:
                     return null;
             }

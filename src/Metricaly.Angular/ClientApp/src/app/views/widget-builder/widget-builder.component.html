@@ -1,4 +1,5 @@
-<nb-card style="width: 90vw; height: 95vh">
+<!-- <nb-card style="width: 90vw; height: 95vh"> -->
+<nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="large">
   <nb-card-header>
     <div class="d-flex">
       <div class="mr-auto">
@@ -8,7 +9,7 @@
       </div>
 
       <button nbButton size="small" status="success" (click)="saveWidget()" [disabled]="savingWidget"
-         nbSpinnerStatus="success">
+        nbSpinnerStatus="success">
         Save Widget
         <nb-icon icon="checkmark-outline"> </nb-icon>
       </button>
@@ -17,8 +18,18 @@
   </nb-card-header>
 
   <nb-card-body>
-    <app-line-chart-builder *ngIf="!loading" [applicationId]="applicationId" [(lineChartWidget)]="widgetData"
-      [selectedDaterange]="selectedDaterange">
-    </app-line-chart-builder>
+
+    <ng-container *ngIf="!loading && widget">
+
+      <app-line-chart-builder *ngIf="widget.type == 'LineChart'" [applicationId]="applicationId"
+        [(lineChartWidget)]="widgetData" [selectedDaterange]="selectedDaterange">
+      </app-line-chart-builder>
+
+      <app-simple-number-builder *ngIf="widget.type == 'SimpleNumber'" [applicationId]="applicationId"
+        [(widgetData)]="widgetData" [selectedDaterange]="selectedDaterange">
+      </app-simple-number-builder>
+
+    </ng-container>
+
   </nb-card-body>
 </nb-card>

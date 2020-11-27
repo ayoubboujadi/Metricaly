@@ -248,7 +248,13 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 -5 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" /></svg>
       </button>
       <button class="btn btn-default" *ngIf="showCancel" type="button" (click)="clickCancel($event)">{{locale.cancelLabel}}</button>
-      <button nbButton status="primary" [disabled]="applyBtn.disabled" type="button" (click)="clickApply($event)">{{locale.applyLabel}}</button>
+
+      <ng-container *ngFor="let item of timeButtons">
+        <button *ngIf="!item.selected" nbButton size="small" (click)="handleTimeClick(item)">{{item.label}}</button>
+        <button *ngIf="item.selected" outline status="info" nbButton size="small" (click)="handleTimeClick(item)">{{item.label}}</button>
+      </ng-container>
+
+      <button nbButton size="small" status="primary" [disabled]="applyBtn.disabled" type="button" (click)="clickApply($event)">{{locale.applyLabel}}</button>
     </div>
   </div>
 </div>

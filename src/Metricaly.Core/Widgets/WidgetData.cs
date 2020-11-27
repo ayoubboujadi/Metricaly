@@ -6,7 +6,8 @@ namespace Metricaly.Core.Widgets
 {
     public enum WidgetType
     {
-        LineChart
+        LineChart,
+        SimpleNumber
     }
 
     public interface IWidgetData

@@ -1,0 +1,15 @@
+<div class="d-flex flex-wrap" style="height: 100%;" [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="giant">
+    <div class="number-widget" *ngFor='let item of data' [ngStyle]="{'border-top-color': item.metric.color}">
+
+        <div class="h3 value" style="margin-bottom: .2rem;">
+            {{item.value}} <span style="font-size: .8rem; font-weight: 600;">{{item.metric.unit}}</span>
+        </div>
+
+        <div class="details subtitle-2" style="color: #8f9bb3;">
+            <div style="white-space: nowrap;">
+                {{ item.metric.label }}
+            </div>
+        </div>
+
+    </div>
+</div>

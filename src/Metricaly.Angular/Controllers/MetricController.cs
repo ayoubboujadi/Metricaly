@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Metricaly.Infrastructure.Dtos;
+using Metricaly.Infrastructure.Metrics.Queries.GetMetricsAggregatedValue;
 using Metricaly.Infrastructure.Metrics.Queries.GetMetricsForApplication;
 using Metricaly.Infrastructure.Metrics.Queries.GetMetricTimeSeries;
 using Microsoft.AspNetCore.Authorization;
@@ -21,16 +22,16 @@ namespace Metricaly.Web.Controllers
             this.mediator = mediator;
         }
 
-        [HttpPost("query")]
-        public async Task<ActionResult<MetricsTimeSeriesResultDto>> GetMetricValues([FromBody] GetMetricTimeSeriesQuery request)
+        [HttpPost("timeseries")]
+        public async Task<ActionResult<MetricsTimeSeriesResultDto>> GetTimeSeries([FromBody] GetMetricTimeSeriesQuery request)
         {
-            try
-            {
-                return await mediator.Send(request);
-            }
-            catch (Exception ex)
-            { }
-            return NoContent();
+            return await mediator.Send(request);
+        }
+
+        [HttpPost("aggregatedvalue")]
+        public async Task<ActionResult<List<MetricAggregatedValueDto>>> GetAggregatedValue([FromBody] GetMetricsAggregatedValueQuery request)
+        {
+            return await mediator.Send(request);
         }
 
         [HttpGet("{applicationId}/metrics")]

@@ -78,12 +78,12 @@
         }
       }
     },
-    "/Metric/query": {
+    "/Metric/timeseries": {
       "post": {
         "tags": [
           "Metric"
         ],
-        "operationId": "Metric_GetMetricValues",
+        "operationId": "Metric_GetTimeSeries",
         "consumes": [
           "application/json",
           "text/json",
@@ -111,6 +111,47 @@
             "description": "",
             "schema": {
               "$ref": "#/definitions/MetricsTimeSeriesResultDto"
+            }
+          }
+        }
+      }
+    },
+    "/Metric/aggregatedvalue": {
+      "post": {
+        "tags": [
+          "Metric"
+        ],
+        "operationId": "Metric_GetAggregatedValue",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GetMetricsAggregatedValueQuery"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/MetricAggregatedValueDto"
+              }
             }
           }
         }
@@ -644,6 +685,116 @@
           }
         }
       }
+    },
+    "/api/SimpleNumberWidget": {
+      "put": {
+        "tags": [
+          "SimpleNumberWidget"
+        ],
+        "operationId": "SimpleNumberWidget_Update",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "requestData",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateWidgetCommandOfSimpleNumberWidget"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
+    "/api/SimpleNumberWidget/get/{widgetId}": {
+      "get": {
+        "tags": [
+          "SimpleNumberWidget"
+        ],
+        "operationId": "SimpleNumberWidget_Get",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "widgetId",
+            "in": "path",
+            "required": true,
+            "format": "guid",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/WidgetDetailsVmOfSimpleNumberWidget"
+            }
+          }
+        }
+      }
+    },
+    "/api/SimpleNumberWidget/get": {
+      "post": {
+        "tags": [
+          "SimpleNumberWidget"
+        ],
+        "operationId": "SimpleNumberWidget_ReadMultiple",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "widgetIds",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "guid"
+              }
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WidgetDetailsVmOfSimpleNumberWidget"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -797,15 +948,86 @@
         "Sum",
         "Min",
         "Max",
-        "SimpleCount"
+        "SamplesCount"
       ],
       "enum": [
         "Average",
         "Sum",
         "Min",
         "Max",
-        "SimpleCount"
+        "SamplesCount"
       ]
+    },
+    "MetricAggregatedValueDto": {
+      "type": "object",
+      "required": [
+        "samplingType"
+      ],
+      "properties": {
+        "guid": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number",
+          "format": "double"
+        },
+        "samplingType": {
+          "$ref": "#/definitions/SamplingType"
+        },
+        "metricName": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        }
+      }
+    },
+    "GetMetricsAggregatedValueQuery": {
+      "type": "object",
+      "required": [
+        "startTimestamp",
+        "applicationId"
+      ],
+      "properties": {
+        "startTimestamp": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "endTimestamp": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "applicationId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AggregateMetricRequestDto"
+          }
+        }
+      }
+    },
+    "AggregateMetricRequestDto": {
+      "type": "object",
+      "required": [
+        "samplingType"
+      ],
+      "properties": {
+        "guid": {
+          "type": "string"
+        },
+        "metricName": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "samplingType": {
+          "$ref": "#/definitions/SamplingType"
+        }
+      }
     },
     "MetricDto": {
       "type": "object",
@@ -1153,10 +1375,12 @@
       "type": "string",
       "description": "",
       "x-enumNames": [
-        "LineChart"
+        "LineChart",
+        "SimpleNumber"
       ],
       "enum": [
-        "LineChart"
+        "LineChart",
+        "SimpleNumber"
       ]
     },
     "WidgetDto": {
@@ -1332,6 +1556,85 @@
         },
         "widgetData": {
           "$ref": "#/definitions/LineChartWidget"
+        }
+      }
+    },
+    "UpdateWidgetCommandOfSimpleNumberWidget": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "guid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "widgetData": {
+          "$ref": "#/definitions/SimpleNumberWidget"
+        }
+      }
+    },
+    "SimpleNumberWidget": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/WidgetData"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "plottedMetrics": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SimpleNumberPlottedMetric"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SimpleNumberPlottedMetric": {
+      "type": "object",
+      "required": [
+        "samplingType"
+      ],
+      "properties": {
+        "metricId": {
+          "type": "string"
+        },
+        "guid": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "metricName": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "samplingType": {
+          "$ref": "#/definitions/SamplingType"
+        }
+      }
+    },
+    "WidgetDetailsVmOfSimpleNumberWidget": {
+      "type": "object",
+      "properties": {
+        "widget": {
+          "$ref": "#/definitions/WidgetDto"
+        },
+        "widgetData": {
+          "$ref": "#/definitions/SimpleNumberWidget"
         }
       }
     }

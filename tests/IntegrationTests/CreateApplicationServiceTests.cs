@@ -4,6 +4,7 @@ using Metricaly.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace IntegrationTests
@@ -29,9 +30,9 @@ namespace IntegrationTests
         [Test]
         public async Task ShouldCreateApplication()
         {
-            await createApplicationService.CreateAsync(applicationName, userId);
+            var createApp = await createApplicationService.CreateAsync(applicationName, userId);
 
-            var application = await applicationDbContext.Applications.FirstOrDefaultAsync();
+            var application = await applicationDbContext.Applications.FirstOrDefaultAsync(x => x.Id == createApp.Id);
 
             application.Id.Should().NotBeEmpty();
             application.Name.Should().Be(applicationName);

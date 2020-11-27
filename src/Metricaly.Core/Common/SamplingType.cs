@@ -6,6 +6,6 @@ namespace Metricaly.Core.Common
 {
     public enum SamplingType
     {
-        Average = 1, Sum, Min, Max, SimpleCount
+        Average = 1, Sum, Min, Max, SamplesCount
     }
 }

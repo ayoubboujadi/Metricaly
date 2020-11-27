@@ -1,7 +1,8 @@
 import { ReactiveFormsModule } from '@angular/forms';
-import { Component, OnInit, Input, ViewChild, TemplateRef, ComponentFactoryResolver, ComponentFactory, ComponentRef, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ComponentFactoryResolver } from '@angular/core';
 import { DashboardGridWidget } from '../dashboard.component';
 import { LineChartWidgetComponent } from '@app/views/widgets/line-chart-widget/line-chart-widget.component';
+import { WidgetComponent } from './../../widgets/widget-component.interface';
 
 @Component({
   selector: 'app-dashboard-item',
@@ -10,7 +11,7 @@ import { LineChartWidgetComponent } from '@app/views/widgets/line-chart-widget/l
 })
 export class DashboardItemComponent implements OnInit {
 
-  @ViewChild(LineChartWidgetComponent) lineChartWidgetChild: LineChartWidgetComponent;
+  @ViewChild(WidgetComponent) widgetElement: WidgetComponent;
 
   @Input() item: DashboardGridWidget;
   @Input() selectedTimePeriod: any;
@@ -24,12 +25,11 @@ export class DashboardItemComponent implements OnInit {
   }
 
   loadData() {
-    this.lineChartWidgetChild?.loadPlottedMetricsData();
+    this.widgetElement?.loadPlottedMetricsData();
   }
 
   reloadWidget() {
-    console.log('reloaddd')
-   this.lineChartWidgetChild?.hardReloadPlottedMetrics();
+   this.widgetElement?.hardReloadPlottedMetrics();
   }
 
   getWidgetContextMenu() {

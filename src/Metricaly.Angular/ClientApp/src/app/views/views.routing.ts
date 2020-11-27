@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '@app/core/shared/utils';
 import { HomeComponent } from './home/home.component';
+import { SimpleNumberWidgetComponent } from './widgets/simple-number-widget/simple-number-widget.component';
 
 const routes: Routes = [{
   path: '',
@@ -46,6 +47,12 @@ const routes: Routes = [{
     {
       path: '',
       component: HomeComponent,
+      pathMatch: 'full',
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'test',
+      component: SimpleNumberWidgetComponent,
       pathMatch: 'full',
       canActivate: [AuthGuard]
     },

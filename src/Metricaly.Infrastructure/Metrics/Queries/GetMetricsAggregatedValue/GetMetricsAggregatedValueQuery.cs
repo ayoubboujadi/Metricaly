@@ -13,18 +13,17 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Metricaly.Infrastructure.Metrics.Queries.GetMetricTimeSeries
+namespace Metricaly.Infrastructure.Metrics.Queries.GetMetricsAggregatedValue
 {
-    public class GetMetricTimeSeriesQuery : IRequest<MetricsTimeSeriesResultDto>
+    public class GetMetricsAggregatedValueQuery : IRequest<List<MetricAggregatedValueDto>>
     {
         public long StartTimestamp { get; set; }
         public long? EndTimestamp { get; set; }
-        public int SamplingTime { get; set; }
         public Guid ApplicationId { get; set; }
-        public List<MetricNamespaceDTO> Metrics { get; set; }
+        public List<AggregateMetricRequestDto> Metrics { get; set; }
     }
 
-    public class MetricNamespaceDTO
+    public class AggregateMetricRequestDto
     {
         public string Guid { get; set; }
         public string MetricName { get; set; }
@@ -32,33 +31,30 @@ namespace Metricaly.Infrastructure.Metrics.Queries.GetMetricTimeSeries
         public SamplingType SamplingType { get; set; } = SamplingType.Average;
     }
 
-    public class GetMetricTimeSeriesQueryHandler : IRequestHandler<GetMetricTimeSeriesQuery, MetricsTimeSeriesResultDto>
+    public class GetMetricsAggregatedValueQueryHandler : IRequestHandler<GetMetricsAggregatedValueQuery, List<MetricAggregatedValueDto>>
     {
         private readonly ApplicationDbContext context;
         private readonly ICurrentUserService currentUserService;
-        private readonly IMetricDownSampler metricDownSampler;
         private readonly IMetricsRetriever metricsRetriever;
 
-        public GetMetricTimeSeriesQueryHandler(ApplicationDbContext context, ICurrentUserService currentUserService,
-            IMetricDownSampler metricDownSampler, IMetricsRetriever metricsRetriever)
+        public GetMetricsAggregatedValueQueryHandler(ApplicationDbContext context, ICurrentUserService currentUserService,
+            IMetricsRetriever metricsRetriever)
         {
             this.context = context;
             this.currentUserService = currentUserService;
-            this.metricDownSampler = metricDownSampler;
             this.metricsRetriever = metricsRetriever;
         }
 
-        public async Task<MetricsTimeSeriesResultDto> Handle(GetMetricTimeSeriesQuery request, CancellationToken cancellationToken)
+        public async Task<List<MetricAggregatedValueDto>> Handle(GetMetricsAggregatedValueQuery request, CancellationToken cancellationToken)
         {
             var dbMetrics = await ValidateMetrics(request);
 
             if (dbMetrics.Count == 0)
-                return new MetricsTimeSeriesResultDto();
+                return new List<MetricAggregatedValueDto>();
 
             long endTimestamp = request.EndTimestamp == null ? TimeStampProvider.GetCurrentTimeStamp(TimePrecisionUnit.Seconds) : (long)request.EndTimestamp;
 
-
-            MetricsTimeSeriesResultDto result = new MetricsTimeSeriesResultDto();
+            var result = new List<MetricAggregatedValueDto>();
 
             for (int i = 0; i < request.Metrics.Count; i++)
             {
@@ -71,25 +67,15 @@ namespace Metricaly.Infrastructure.Metrics.Queries.GetMetricTimeSeries
                 // Retrieve the metrics
                 var metricValues = await metricsRetriever.QueryAsync(dbMetric, new TimePeriod() { StartTimestamp = request.StartTimestamp, EndTimestamp = endTimestamp });
 
-                // Down sample the metrics
-                var samplingResult = metricDownSampler.DownSample(metricValues, request.SamplingTime, request.StartTimestamp, endTimestamp);
+                var metricValue = GetMetricTimeSeriesValueForSamplingType(requestMetric, metricValues);
 
-                var metricValue = GetMetricTimeSeriesValueForSamplingType(requestMetric, samplingResult);
-
-                result.Values.Add(metricValue);
-
-                if (i == 0)
-                {
-                    result.Timestamps = samplingResult.MetricValues.Select(x => x.TimeStamp).ToList();
-                    result.Count = samplingResult.MetricValues.Count;
-                    result.SamplingValue = samplingResult.DownsamplingValue;
-                }
+                result.Add(metricValue);
             }
 
             return result;
         }
 
-        private async Task<List<Metric>> ValidateMetrics(GetMetricTimeSeriesQuery request)
+        private async Task<List<Metric>> ValidateMetrics(GetMetricsAggregatedValueQuery request)
         {
             var currentUserId = currentUserService.GetCurrentUserId();
             try
@@ -125,9 +111,9 @@ namespace Metricaly.Infrastructure.Metrics.Queries.GetMetricTimeSeries
             }
         }
 
-        private MetricTimeSeriesValueDto GetMetricTimeSeriesValueForSamplingType(MetricNamespaceDTO requestMetric, MetricDownsaplingResult samplingResult)
+        private MetricAggregatedValueDto GetMetricTimeSeriesValueForSamplingType(AggregateMetricRequestDto requestMetric, MetricValue[] metricValues)
         {
-            var metricValue = new MetricTimeSeriesValueDto()
+            var metricValue = new MetricAggregatedValueDto()
             {
                 MetricName = requestMetric.MetricName,
                 Namespace = requestMetric.Namespace,
@@ -137,19 +123,19 @@ namespace Metricaly.Infrastructure.Metrics.Queries.GetMetricTimeSeries
             switch (requestMetric.SamplingType)
             {
                 case SamplingType.Average:
-                    metricValue.Values = samplingResult.MetricValues.Select(x => x.Sum / x.Count).ToList();
-                    break;
+                    metricValue.Value = metricValues.Average(x => x.Sum / x.Count);
+                    break;  
                 case SamplingType.Max:
-                    metricValue.Values = samplingResult.MetricValues.Select(x => x.Max).ToList();
+                    metricValue.Value  = metricValues.Max(x => x.Max);
                     break;
                 case SamplingType.Min:
-                    metricValue.Values = samplingResult.MetricValues.Select(x => x.Min).ToList();
+                    metricValue.Value = metricValues.Min(x => x.Min);
                     break;
                 case SamplingType.Sum:
-                    metricValue.Values = samplingResult.MetricValues.Select(x => x.Sum).ToList();
+                    metricValue.Value = metricValues.Sum(x => x.Sum);
                     break;
                 case SamplingType.SamplesCount:
-                    metricValue.Values = samplingResult.MetricValues.Select(x => x.Count).ToList();
+                    metricValue.Value = metricValues.Sum(x => x.Count);
                     break;
             }
 

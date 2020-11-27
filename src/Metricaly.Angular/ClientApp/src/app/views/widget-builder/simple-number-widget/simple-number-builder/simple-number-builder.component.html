@@ -1,0 +1,39 @@
+
+<div style="display: block; min-height:15rem">
+  <app-simple-number-widget *ngIf="hasPlottedMetrics()" #widgetChildElement [applicationId]="applicationId"
+    [widgetData]="widgetData" [timePeriod]="selectedDaterange">
+  </app-simple-number-widget>
+
+  <div *ngIf="!hasPlottedMetrics()" class="align-items-center d-flex justify-content-center" style="height: 100%;">
+    <span style="font-size: 1.4rem;">
+      Start by adding metrics to plot from the table bellow.
+    </span>
+  </div>
+</div>
+
+<hr />
+
+<nb-tabset fullWidth>
+  <nb-tab tabTitle="Metrics" [nbSpinner]="loadingMetrics" nbSpinnerStatus="primary" nbSpinnerSize="large">
+    <app-metrics-list [metrics]="applicationMetrics" (metricAddedEvent)="metricAddedEvent($event)"></app-metrics-list>
+  </nb-tab>
+
+  <nb-tab tabTitle="Plotted Metrics" [badgeText]="widgetData.plottedMetrics?.length" badgeStatus="info">
+    <div *ngIf="!hasPlottedMetrics()" class="align-items-center d-flex justify-content-center p-5"
+      style="height: 100%;">
+      <span>
+        Start by adding metrics to plot from the Metrics tab.
+      </span>
+    </div>
+
+    <app-simple-number-plotted-metrics-list *ngIf="hasPlottedMetrics()"
+      [plottedMetrics]="widgetData.plottedMetrics" (plottedMetricsChange)="plottedMetricsChanged($event)"
+      (plottedMetricRemovedEvent)="plottedMetricRemoved($event)"
+      (samplingTypeChange)="handleSamplingTypeChange($event)">
+    </app-simple-number-plotted-metrics-list>
+  </nb-tab>
+
+  <nb-tab tabTitle="Widget Settings">
+
+  </nb-tab>
+</nb-tabset>

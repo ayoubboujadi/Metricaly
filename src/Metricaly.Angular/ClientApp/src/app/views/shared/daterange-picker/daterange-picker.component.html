@@ -1,27 +1,14 @@
-
 <div>
-
-  <input type="text"
-         nbInput
-         fieldSize="small"
-         ngxDaterangepickerMd2
-         name="daterange"
-         [ngModel]="selectedDaterange"
-         (ngModelChange)="handleSelectedDaterangeChange($event)"
-         endKey="end"
-         startKey="start"
-         style="max-width: 25rem; width: 350px;"
-         [ranges]="ranges"
-         alwaysShowCalendars="true"
-         keepCalendarOpeningWithRange="true"
-         timePicker="true"
-         timePickerSeconds="true"
-         opens="right" />
+  <input type="text" nbInput fieldSize="small" ngxDaterangepickerMd2 name="daterange" [ngModel]="selectedDaterange"
+    (ngModelChange)="handleSelectedDaterangeChange($event)" endKey="end" startKey="start"
+    style="max-width: 25rem; width: 350px;" [ranges]="ranges" alwaysShowCalendars="true"
+    keepCalendarOpeningWithRange="true" timePicker="true" timePickerSeconds="true" opens="right" />
 
   <div class="button-group ml-1" style="display: inline;">
     <ng-container *ngFor="let item of timeButtons">
       <button *ngIf="!item.selected" nbButton size="small" (click)="handleTimeClick(item)">{{item.label}}</button>
-      <button *ngIf="item.selected" outline status="info" nbButton size="small" (click)="handleTimeClick(item)">{{item.label}}</button>
+      <button *ngIf="item.selected" outline status="info" nbButton size="small"
+        (click)="handleTimeClick(item)">{{item.label}}</button>
     </ng-container>
   </div>
 

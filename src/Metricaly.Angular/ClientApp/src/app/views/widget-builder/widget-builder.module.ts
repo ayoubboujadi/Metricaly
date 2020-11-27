@@ -13,26 +13,50 @@ import { LineChartSettingsFormComponent } from './line-chart-widget/line-chart-s
 import { LineChartBuilderComponent } from './line-chart-widget/line-chart-builder/line-chart-builder.component';
 import { WidgetsModule } from '../widgets/widgets.module';
 import { SharedModule } from '../shared/shared.module';
-
-// Nebular
-import { NbThemeModule, NbCardModule, NbTabsetModule, NbListModule, NbButtonModule, NbIconModule, NbDialogModule, NbInputModule, NbToggleModule, NbMenuModule, NbSelectModule, NbFormFieldModule, NbCalendarKitModule, NbSpinnerModule, NbTooltipModule } from '@nebular/theme';
 import { MetricsListComponent } from './metrics-list/metrics-list.component';
 import { LineChartPlottedMetricsListComponent } from './line-chart-widget/line-chart-plotted-metrics-list/line-chart-plotted-metrics-list.component';
+import { SimpleNumberPlottedMetricsListComponent } from './simple-number-widget/simple-number-plotted-metrics-list/simple-number-plotted-metrics-list.component';
+import { SimpleNumberBuilderComponent } from './simple-number-widget/simple-number-builder/simple-number-builder.component';
+
+// Nebular
+import {
+  NbThemeModule,
+  NbCardModule,
+  NbTabsetModule,
+  NbListModule,
+  NbButtonModule,
+  NbIconModule,
+  NbDialogModule,
+  NbInputModule,
+  NbToggleModule,
+  NbMenuModule,
+  NbSelectModule,
+  NbFormFieldModule,
+  NbCalendarKitModule,
+  NbSpinnerModule,
+  NbTooltipModule
+} from '@nebular/theme';
+
 
 
 @NgModule({
-  declarations: [WidgetBuilderComponent, LineChartBuilderComponent, LineChartSettingsFormComponent, MetricsListComponent, LineChartPlottedMetricsListComponent],
+  declarations: [
+    WidgetBuilderComponent,
+    LineChartBuilderComponent,
+    LineChartSettingsFormComponent,
+    MetricsListComponent,
+    LineChartPlottedMetricsListComponent,
+    SimpleNumberBuilderComponent,
+    SimpleNumberPlottedMetricsListComponent
+  ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-
     ColorSketchModule,
     NgxEchartsModule.forChild(),
-
     WidgetsModule,
     SharedModule,
-
     NbThemeModule,
     NbCardModule,
     NbTabsetModule,
@@ -53,7 +77,7 @@ import { LineChartPlottedMetricsListComponent } from './line-chart-widget/line-c
       {
         path: 'line-chart/:widgetId',
         component: WidgetBuilderComponent,
-        data: {breadcrumb: 'Widget Builder'}
+        data: { breadcrumb: 'Widget Builder' }
       },
     ])
   ]

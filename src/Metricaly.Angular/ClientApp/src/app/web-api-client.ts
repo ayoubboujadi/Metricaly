@@ -136,7 +136,8 @@ export class AuthClient implements IAuthClient {
 }
 
 export interface IMetricClient {
-    getMetricValues(request: GetMetricTimeSeriesQuery): Observable<MetricsTimeSeriesResultDto>;
+    getTimeSeries(request: GetMetricTimeSeriesQuery): Observable<MetricsTimeSeriesResultDto>;
+    getAggregatedValue(request: GetMetricsAggregatedValueQuery): Observable<MetricAggregatedValueDto[]>;
     listMetrics(applicationId: string): Observable<MetricDto[]>;
 }
 
@@ -153,8 +154,8 @@ export class MetricClient implements IMetricClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getMetricValues(request: GetMetricTimeSeriesQuery): Observable<MetricsTimeSeriesResultDto> {
-        let url_ = this.baseUrl + "/Metric/query";
+    getTimeSeries(request: GetMetricTimeSeriesQuery): Observable<MetricsTimeSeriesResultDto> {
+        let url_ = this.baseUrl + "/Metric/timeseries";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(request);
@@ -170,11 +171,11 @@ export class MetricClient implements IMetricClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetMetricValues(response_);
+            return this.processGetTimeSeries(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetMetricValues(<any>response_);
+                    return this.processGetTimeSeries(<any>response_);
                 } catch (e) {
                     return <Observable<MetricsTimeSeriesResultDto>><any>_observableThrow(e);
                 }
@@ -183,7 +184,7 @@ export class MetricClient implements IMetricClient {
         }));
     }
 
-    protected processGetMetricValues(response: HttpResponseBase): Observable<MetricsTimeSeriesResultDto> {
+    protected processGetTimeSeries(response: HttpResponseBase): Observable<MetricsTimeSeriesResultDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -203,6 +204,62 @@ export class MetricClient implements IMetricClient {
             }));
         }
         return _observableOf<MetricsTimeSeriesResultDto>(<any>null);
+    }
+
+    getAggregatedValue(request: GetMetricsAggregatedValueQuery): Observable<MetricAggregatedValueDto[]> {
+        let url_ = this.baseUrl + "/Metric/aggregatedvalue";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAggregatedValue(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAggregatedValue(<any>response_);
+                } catch (e) {
+                    return <Observable<MetricAggregatedValueDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<MetricAggregatedValueDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAggregatedValue(response: HttpResponseBase): Observable<MetricAggregatedValueDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(MetricAggregatedValueDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<MetricAggregatedValueDto[]>(<any>null);
     }
 
     listMetrics(applicationId: string): Observable<MetricDto[]> {
@@ -1120,6 +1177,183 @@ export class LineChartWidgetClient implements ILineChartWidgetClient {
     }
 }
 
+export interface ISimpleNumberWidgetClient {
+    update(requestData: UpdateWidgetCommandOfSimpleNumberWidget): Observable<FileResponse | null>;
+    get(widgetId: string): Observable<WidgetDetailsVmOfSimpleNumberWidget>;
+    readMultiple(widgetIds: string[]): Observable<WidgetDetailsVmOfSimpleNumberWidget[]>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class SimpleNumberWidgetClient implements ISimpleNumberWidgetClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    update(requestData: UpdateWidgetCommandOfSimpleNumberWidget): Observable<FileResponse | null> {
+        let url_ = this.baseUrl + "/api/SimpleNumberWidget";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(requestData);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<FileResponse | null> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse | null>(<any>null);
+    }
+
+    get(widgetId: string): Observable<WidgetDetailsVmOfSimpleNumberWidget> {
+        let url_ = this.baseUrl + "/api/SimpleNumberWidget/get/{widgetId}";
+        if (widgetId === undefined || widgetId === null)
+            throw new Error("The parameter 'widgetId' must be defined.");
+        url_ = url_.replace("{widgetId}", encodeURIComponent("" + widgetId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<WidgetDetailsVmOfSimpleNumberWidget>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<WidgetDetailsVmOfSimpleNumberWidget>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<WidgetDetailsVmOfSimpleNumberWidget> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WidgetDetailsVmOfSimpleNumberWidget.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<WidgetDetailsVmOfSimpleNumberWidget>(<any>null);
+    }
+
+    readMultiple(widgetIds: string[]): Observable<WidgetDetailsVmOfSimpleNumberWidget[]> {
+        let url_ = this.baseUrl + "/api/SimpleNumberWidget/get";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(widgetIds);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processReadMultiple(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processReadMultiple(<any>response_);
+                } catch (e) {
+                    return <Observable<WidgetDetailsVmOfSimpleNumberWidget[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<WidgetDetailsVmOfSimpleNumberWidget[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processReadMultiple(response: HttpResponseBase): Observable<WidgetDetailsVmOfSimpleNumberWidget[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(WidgetDetailsVmOfSimpleNumberWidget.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<WidgetDetailsVmOfSimpleNumberWidget[]>(<any>null);
+    }
+}
+
 export class RegisterCommand implements IRegisterCommand {
     email?: string | undefined;
     name?: string | undefined;
@@ -1481,7 +1715,163 @@ export enum SamplingType {
     Sum = "Sum",
     Min = "Min",
     Max = "Max",
-    SimpleCount = "SimpleCount",
+    SamplesCount = "SamplesCount",
+}
+
+export class MetricAggregatedValueDto implements IMetricAggregatedValueDto {
+    guid?: string | undefined;
+    value?: number | undefined;
+    samplingType!: SamplingType;
+    metricName?: string | undefined;
+    namespace?: string | undefined;
+
+    constructor(data?: IMetricAggregatedValueDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.guid = _data["guid"];
+            this.value = _data["value"];
+            this.samplingType = _data["samplingType"];
+            this.metricName = _data["metricName"];
+            this.namespace = _data["namespace"];
+        }
+    }
+
+    static fromJS(data: any): MetricAggregatedValueDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new MetricAggregatedValueDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["guid"] = this.guid;
+        data["value"] = this.value;
+        data["samplingType"] = this.samplingType;
+        data["metricName"] = this.metricName;
+        data["namespace"] = this.namespace;
+        return data; 
+    }
+}
+
+export interface IMetricAggregatedValueDto {
+    guid?: string | undefined;
+    value?: number | undefined;
+    samplingType: SamplingType;
+    metricName?: string | undefined;
+    namespace?: string | undefined;
+}
+
+export class GetMetricsAggregatedValueQuery implements IGetMetricsAggregatedValueQuery {
+    startTimestamp!: number;
+    endTimestamp?: number | undefined;
+    applicationId!: string;
+    metrics?: AggregateMetricRequestDto[] | undefined;
+
+    constructor(data?: IGetMetricsAggregatedValueQuery) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.startTimestamp = _data["startTimestamp"];
+            this.endTimestamp = _data["endTimestamp"];
+            this.applicationId = _data["applicationId"];
+            if (Array.isArray(_data["metrics"])) {
+                this.metrics = [] as any;
+                for (let item of _data["metrics"])
+                    this.metrics!.push(AggregateMetricRequestDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetMetricsAggregatedValueQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetMetricsAggregatedValueQuery();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["startTimestamp"] = this.startTimestamp;
+        data["endTimestamp"] = this.endTimestamp;
+        data["applicationId"] = this.applicationId;
+        if (Array.isArray(this.metrics)) {
+            data["metrics"] = [];
+            for (let item of this.metrics)
+                data["metrics"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IGetMetricsAggregatedValueQuery {
+    startTimestamp: number;
+    endTimestamp?: number | undefined;
+    applicationId: string;
+    metrics?: AggregateMetricRequestDto[] | undefined;
+}
+
+export class AggregateMetricRequestDto implements IAggregateMetricRequestDto {
+    guid?: string | undefined;
+    metricName?: string | undefined;
+    namespace?: string | undefined;
+    samplingType!: SamplingType;
+
+    constructor(data?: IAggregateMetricRequestDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.guid = _data["guid"];
+            this.metricName = _data["metricName"];
+            this.namespace = _data["namespace"];
+            this.samplingType = _data["samplingType"];
+        }
+    }
+
+    static fromJS(data: any): AggregateMetricRequestDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AggregateMetricRequestDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["guid"] = this.guid;
+        data["metricName"] = this.metricName;
+        data["namespace"] = this.namespace;
+        data["samplingType"] = this.samplingType;
+        return data; 
+    }
+}
+
+export interface IAggregateMetricRequestDto {
+    guid?: string | undefined;
+    metricName?: string | undefined;
+    namespace?: string | undefined;
+    samplingType: SamplingType;
 }
 
 export class MetricDto implements IMetricDto {
@@ -2161,6 +2551,7 @@ export interface ICreateWidgetCommand {
 
 export enum WidgetType {
     LineChart = "LineChart",
+    SimpleNumber = "SimpleNumber",
 }
 
 export class WidgetDto implements IWidgetDto {
@@ -2550,6 +2941,195 @@ export class WidgetDetailsVmOfLineChartWidget implements IWidgetDetailsVmOfLineC
 export interface IWidgetDetailsVmOfLineChartWidget {
     widget?: WidgetDto | undefined;
     widgetData?: LineChartWidget | undefined;
+}
+
+export class UpdateWidgetCommandOfSimpleNumberWidget implements IUpdateWidgetCommandOfSimpleNumberWidget {
+    id!: string;
+    name?: string | undefined;
+    widgetData?: SimpleNumberWidget | undefined;
+
+    constructor(data?: IUpdateWidgetCommandOfSimpleNumberWidget) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.widgetData = _data["widgetData"] ? SimpleNumberWidget.fromJS(_data["widgetData"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UpdateWidgetCommandOfSimpleNumberWidget {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateWidgetCommandOfSimpleNumberWidget();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["widgetData"] = this.widgetData ? this.widgetData.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IUpdateWidgetCommandOfSimpleNumberWidget {
+    id: string;
+    name?: string | undefined;
+    widgetData?: SimpleNumberWidget | undefined;
+}
+
+export class SimpleNumberWidget extends WidgetData implements ISimpleNumberWidget {
+    plottedMetrics?: SimpleNumberPlottedMetric[] | undefined;
+
+    constructor(data?: ISimpleNumberWidget) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["plottedMetrics"])) {
+                this.plottedMetrics = [] as any;
+                for (let item of _data["plottedMetrics"])
+                    this.plottedMetrics!.push(SimpleNumberPlottedMetric.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SimpleNumberWidget {
+        data = typeof data === 'object' ? data : {};
+        let result = new SimpleNumberWidget();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.plottedMetrics)) {
+            data["plottedMetrics"] = [];
+            for (let item of this.plottedMetrics)
+                data["plottedMetrics"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ISimpleNumberWidget extends IWidgetData {
+    plottedMetrics?: SimpleNumberPlottedMetric[] | undefined;
+}
+
+export class SimpleNumberPlottedMetric implements ISimpleNumberPlottedMetric {
+    metricId?: string | undefined;
+    guid?: string | undefined;
+    label?: string | undefined;
+    unit?: string | undefined;
+    color?: string | undefined;
+    metricName?: string | undefined;
+    namespace?: string | undefined;
+    samplingType!: SamplingType;
+
+    constructor(data?: ISimpleNumberPlottedMetric) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.metricId = _data["metricId"];
+            this.guid = _data["guid"];
+            this.label = _data["label"];
+            this.unit = _data["unit"];
+            this.color = _data["color"];
+            this.metricName = _data["metricName"];
+            this.namespace = _data["namespace"];
+            this.samplingType = _data["samplingType"];
+        }
+    }
+
+    static fromJS(data: any): SimpleNumberPlottedMetric {
+        data = typeof data === 'object' ? data : {};
+        let result = new SimpleNumberPlottedMetric();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["metricId"] = this.metricId;
+        data["guid"] = this.guid;
+        data["label"] = this.label;
+        data["unit"] = this.unit;
+        data["color"] = this.color;
+        data["metricName"] = this.metricName;
+        data["namespace"] = this.namespace;
+        data["samplingType"] = this.samplingType;
+        return data; 
+    }
+}
+
+export interface ISimpleNumberPlottedMetric {
+    metricId?: string | undefined;
+    guid?: string | undefined;
+    label?: string | undefined;
+    unit?: string | undefined;
+    color?: string | undefined;
+    metricName?: string | undefined;
+    namespace?: string | undefined;
+    samplingType: SamplingType;
+}
+
+export class WidgetDetailsVmOfSimpleNumberWidget implements IWidgetDetailsVmOfSimpleNumberWidget {
+    widget?: WidgetDto | undefined;
+    widgetData?: SimpleNumberWidget | undefined;
+
+    constructor(data?: IWidgetDetailsVmOfSimpleNumberWidget) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.widget = _data["widget"] ? WidgetDto.fromJS(_data["widget"]) : <any>undefined;
+            this.widgetData = _data["widgetData"] ? SimpleNumberWidget.fromJS(_data["widgetData"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): WidgetDetailsVmOfSimpleNumberWidget {
+        data = typeof data === 'object' ? data : {};
+        let result = new WidgetDetailsVmOfSimpleNumberWidget();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["widget"] = this.widget ? this.widget.toJSON() : <any>undefined;
+        data["widgetData"] = this.widgetData ? this.widgetData.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IWidgetDetailsVmOfSimpleNumberWidget {
+    widget?: WidgetDto | undefined;
+    widgetData?: SimpleNumberWidget | undefined;
 }
 
 export interface FileResponse {

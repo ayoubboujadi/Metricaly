@@ -1,0 +1,39 @@
+<table class='table' *ngIf="plottedMetrics">
+    <thead>
+      <tr>
+        <th>Metric Name / Namespace</th>
+        <th>Label</th>
+        <th>Unit</th>
+        <th>Aggregation Type</th>
+        <th>Remove</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let metric of plottedMetrics">
+        <td>{{ metric.metricName }} / {{metric.namespace}}</td>
+        <td>
+          <app-editable-field [data]='metric.label' (focusOut)='metric.label = $event; updatePlottedMetrics();'>
+          </app-editable-field>
+        </td>
+        <td>
+          <app-editable-field [data]='metric.unit' (focusOut)='metric.unit = $event; updatePlottedMetrics();'>
+          </app-editable-field>
+        </td>
+        <td>
+          <nb-select placeholder="Sampling type" [(ngModel)]="metric.samplingType"
+            (ngModelChange)="handleSamplingTypeChange(metric)">
+            <nb-option value="Average">Average</nb-option>
+            <nb-option value="Sum">Sum</nb-option>
+            <nb-option value="Min">Min</nb-option>
+            <nb-option value="Max">Max</nb-option>
+            <nb-option value="SamplesCount">Samples Count</nb-option>
+          </nb-select>
+        </td>
+        <td>
+          <button nbButton ghost status="danger" (click)="removeMetric(metric)">
+            <nb-icon icon="minus-square-outline"></nb-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>

@@ -1,11 +1,6 @@
-
-
 <div style="display: block; height:400px">
-  <app-line-chart-widget *ngIf="hasPlottedMetrics()"
-                         #lineChartWidgetChild
-                         [applicationId]="applicationId"
-                         [lineChartWidget]="lineChartWidget"
-                         [timePeriod]="selectedDaterange">
+  <app-line-chart-widget *ngIf="hasPlottedMetrics()" #lineChartWidgetChild [applicationId]="applicationId"
+    [widgetData]="lineChartWidget" [timePeriod]="selectedDaterange">
   </app-line-chart-widget>
 
   <div *ngIf="!hasPlottedMetrics()" class="align-items-center d-flex justify-content-center" style="height: 100%;">
@@ -18,45 +13,38 @@
 <hr />
 
 <nb-tabset fullWidth>
-  <nb-tab tabTitle="Metrics"
-          [nbSpinner]="loadingMetrics"
-          nbSpinnerStatus="primary"
-          nbSpinnerSize="large">
-    <app-metrics-list [metrics]="applicationMetrics"
-                      (metricAddedEvent)="metricAddedEvent($event)"></app-metrics-list>
+  <nb-tab tabTitle="Metrics" [nbSpinner]="loadingMetrics" nbSpinnerStatus="primary" nbSpinnerSize="large">
+    <app-metrics-list [metrics]="applicationMetrics" (metricAddedEvent)="metricAddedEvent($event)"></app-metrics-list>
   </nb-tab>
 
-  <nb-tab tabTitle="Plotted Metrics"
-          [badgeText]="lineChartWidget.plottedMetrics?.length"
-          badgeStatus="info">
-    <div *ngIf="!hasPlottedMetrics()"
-         class="align-items-center d-flex justify-content-center p-5"
-         style="height: 100%;">
+  <nb-tab tabTitle="Plotted Metrics" [badgeText]="lineChartWidget.plottedMetrics?.length" badgeStatus="info">
+    <div *ngIf="!hasPlottedMetrics()" class="align-items-center d-flex justify-content-center p-5"
+      style="height: 100%;">
       <span>
         Start by adding metrics to plot from the Metrics tab.
       </span>
     </div>
 
     <div class="float-right mb-2" *ngIf="hasPlottedMetrics()">
-      <nb-select placeholder="Sampling value" [(ngModel)]="this.lineChartWidget.samplingTime" (ngModelChange)="handleSamplingTimeChanged($event)">
+      <nb-select placeholder="Sampling value" [(ngModel)]="this.lineChartWidget.samplingTime"
+        (ngModelChange)="handleSamplingTimeChanged($event)">
         <nb-select-label>
           Sampling time: {{ this.lineChartWidget.samplingTime }}
         </nb-select-label>
-        <nb-option *ngFor="let samplingValue of samplingValues" [value]="samplingValue.value">{{samplingValue.label}}</nb-option>
+        <nb-option *ngFor="let samplingValue of samplingValues" [value]="samplingValue.value">{{samplingValue.label}}
+        </nb-option>
       </nb-select>
     </div>
 
-    <app-line-chart-plotted-metrics-list *ngIf="hasPlottedMetrics()"
-                                         [plottedMetrics]="lineChartWidget.plottedMetrics"
-                                         (plottedMetricsChange)="plottedMetricsChanged($event)"
-                                         (plottedMetricRemovedEvent)="plottedMetricRemoved($event)"
-                                         (samplingTypeChange)="handleSamplingTypeChange($event)">
+    <app-line-chart-plotted-metrics-list *ngIf="hasPlottedMetrics()" [plottedMetrics]="lineChartWidget.plottedMetrics"
+      (plottedMetricsChange)="plottedMetricsChanged($event)" (plottedMetricRemovedEvent)="plottedMetricRemoved($event)"
+      (samplingTypeChange)="handleSamplingTypeChange($event)">
     </app-line-chart-plotted-metrics-list>
   </nb-tab>
 
   <nb-tab tabTitle="Widget Settings">
     <app-line-chart-settings-form [settings]="lineChartWidget.widgetSettings"
-                                  (settingsChange)="updateWidgetSettings($event)">
+      (settingsChange)="updateWidgetSettings($event)">
     </app-line-chart-settings-form>
   </nb-tab>
 </nb-tabset>

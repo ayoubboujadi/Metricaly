@@ -1,10 +1,10 @@
 <nb-card style="height: 100%; margin-bottom: 0px;">
-  <nb-card-header style="padding: 0.5rem 1rem;">
+
+  <nb-card-header style="padding: 0.2rem 1rem;">
     <div class="d-flex">
-      <span class="mr-auto drag-handle">
-        <nb-icon icon="move-outline" style="height: 100%;"></nb-icon>
-        <span class="ml-3">{{item.widgetName}}</span>
-      </span>
+      <div class="flex-grow-1 drag-handle">
+        <div style="margin-top: 5px;">{{item.widgetName}}</div>
+      </div>
       <button nbButton size="small" ghost class="mr-1" (click)='reloadWidget()'>
         <nb-icon icon="refresh-outline"></nb-icon>
       </button>
@@ -14,10 +14,19 @@
     </div>
 
   </nb-card-header>
-  <nb-card-body #component style="padding-right: 0px; padding-left: 0px;">
+  <nb-card-body style="padding-right: 0px; padding-left: 0px;">
 
-    <app-line-chart-widget #lineChartWidgetChild [lineChartWidget]="item.widgetData" [timePeriod]="selectedTimePeriod"
-      [applicationId]="applicationId">
-    </app-line-chart-widget>
+    <ng-container *ngIf="item.widgetType === 'LineChart'">
+      <app-line-chart-widget #widgetElement [widgetData]="item.widgetData" [timePeriod]="selectedTimePeriod"
+        [applicationId]="applicationId">
+      </app-line-chart-widget>
+    </ng-container>
+
+    <ng-container *ngIf="item.widgetType === 'SimpleNumber'">
+      <app-simple-number-widget #widgetElement [widgetData]="item.widgetData" [timePeriod]="selectedTimePeriod"
+        [applicationId]="applicationId">
+      </app-simple-number-widget>
+    </ng-container>
+
   </nb-card-body>
 </nb-card>
