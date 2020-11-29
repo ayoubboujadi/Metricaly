@@ -99,6 +99,7 @@ export class LineChartWidgetComponent implements WidgetComponent, OnInit {
 
   hardReloadPlottedMetrics() {
     if (this._widgetData?.plottedMetrics && this._widgetData?.plottedMetrics.length !== 0 && this._timePeriod) {
+      console.log('hardReloadPlottedMetrics()');
       this.loading = true;
       this.metricClient.getTimeSeries(this.parseRequest())
         .subscribe(result => {

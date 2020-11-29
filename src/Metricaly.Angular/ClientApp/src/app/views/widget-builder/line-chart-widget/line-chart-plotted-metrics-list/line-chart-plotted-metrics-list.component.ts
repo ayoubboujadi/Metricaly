@@ -43,4 +43,9 @@ export class LineChartPlottedMetricsListComponent implements OnInit {
       });
   }
 
+  handleStackedChange(metric: LineChartPlottedMetric, newValue: boolean) {
+    metric.stacked = newValue;
+    this.plottedMetricsChange.emit(this.plottedMetrics);
+  }
+
 }

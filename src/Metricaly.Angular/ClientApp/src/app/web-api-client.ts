@@ -2743,6 +2743,7 @@ export class LineChartPlottedMetric implements ILineChartPlottedMetric {
     metricName?: string | undefined;
     namespace?: string | undefined;
     yAxis?: string | undefined;
+    stacked!: boolean;
     samplingType!: SamplingType;
 
     constructor(data?: ILineChartPlottedMetric) {
@@ -2763,6 +2764,7 @@ export class LineChartPlottedMetric implements ILineChartPlottedMetric {
             this.metricName = _data["metricName"];
             this.namespace = _data["namespace"];
             this.yAxis = _data["yAxis"];
+            this.stacked = _data["stacked"];
             this.samplingType = _data["samplingType"];
         }
     }
@@ -2783,6 +2785,7 @@ export class LineChartPlottedMetric implements ILineChartPlottedMetric {
         data["metricName"] = this.metricName;
         data["namespace"] = this.namespace;
         data["yAxis"] = this.yAxis;
+        data["stacked"] = this.stacked;
         data["samplingType"] = this.samplingType;
         return data; 
     }
@@ -2796,6 +2799,7 @@ export interface ILineChartPlottedMetric {
     metricName?: string | undefined;
     namespace?: string | undefined;
     yAxis?: string | undefined;
+    stacked: boolean;
     samplingType: SamplingType;
 }
 

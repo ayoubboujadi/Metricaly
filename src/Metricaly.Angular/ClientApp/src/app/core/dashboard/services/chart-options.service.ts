@@ -195,8 +195,9 @@ export class ChartOptionsService {
         name: plottedMetrics.find(x => x.guid === metricData.metricGuid).label,
         id: metricData.metricGuid,
         //showSymbol: false,
-        color: plottedMetrics.find(x => x.guid === metricData.metricGuid).color,
         smooth: widgetSettings.smoothLines,
+        color: plottedMetrics.find(x => x.guid === metricData.metricGuid).color,
+        stack: plottedMetrics.find(x => x.guid === metricData.metricGuid).stacked,
         markLine: {
           data: [
             { name: 'Max value',  symbol: 'none', yAxis: 'max' }
@@ -205,7 +206,7 @@ export class ChartOptionsService {
       }))
     };
 
-    console.log('connectNulls: ' + widgetSettings.connectNulls);
+    console.log(plottedMetrics.map(x => x.stacked));
 
     // Set filled value
     if (widgetSettings.filled) {

@@ -33,7 +33,8 @@ import {
   NbTooltipModule,
   NbContextMenuModule,
   NbAlertModule,
-  NbRadioModule
+  NbRadioModule,
+  NbCheckboxModule
 } from '@nebular/theme';
 
 import { NbEvaIconsModule } from '@nebular/eva-icons';
@@ -84,6 +85,7 @@ import { API_BASE_URL } from './web-api-client';
     NbContextMenuModule,
     NbAlertModule,
     NbRadioModule,
+    NbCheckboxModule,
 
     NgxDaterangepickerMd.forRoot(),
 

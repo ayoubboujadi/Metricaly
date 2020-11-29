@@ -20,8 +20,6 @@ export class LineChartBuilderComponent implements OnInit, OnDestroy {
 
   @Input()
   public set lineChartWidget(newValue: LineChartWidget) {
-    console.log('linechart widget set;');
-    console.log(newValue);
     this._lineChartWidget = newValue;
     this.lineChartWidgetChild?.hardReloadPlottedMetrics();
   }
@@ -72,7 +70,6 @@ export class LineChartBuilderComponent implements OnInit, OnDestroy {
 
     // Mock dynamic data:
     this.timer = setInterval(() => {
-      console.log('timer')
       if (this._lineChartWidget?.plottedMetrics && this._lineChartWidget?.plottedMetrics?.length > 0) {
         this.lineChartWidgetChild.loadPlottedMetricsData();
       }
@@ -99,7 +96,8 @@ export class LineChartBuilderComponent implements OnInit, OnDestroy {
         label: metric.namespace + ' ' + metric.name,
         yAxis: 'left',
         samplingType: 'Average',
-        guid: GuidGenerator.newGuid()
+        guid: GuidGenerator.newGuid(),
+        stacked: false
       });
 
     plottedMetric.color = this.colorsGenerator.getColor(this._lineChartWidget.plottedMetrics.map(m => m.color));
@@ -123,7 +121,7 @@ export class LineChartBuilderComponent implements OnInit, OnDestroy {
   }
 
   plottedMetricsChanged(plottedMetrics: LineChartPlottedMetric[]) {
-    console.log('plottedMetricsChanged: ' + plottedMetrics.length)
+    console.log('plottedMetricsChanged: ' + plottedMetrics.length);
     // Update the chart with the new plottedMetrics
     this._lineChartWidget.plottedMetrics = plottedMetrics;
     if (this.lineChartWidgetChild) {
@@ -134,6 +132,7 @@ export class LineChartBuilderComponent implements OnInit, OnDestroy {
   plottedMetricRemoved(removedMetric: LineChartPlottedMetric) {
     // When a metric is removed from the graph, the graph should be refreshed first
     this.lineChartWidgetChild.hardReloadPlottedMetrics();
+    this.lineChartWidgetChild.refreshChart();
   }
 
   handleSamplingTimeChanged(newValue: number) {

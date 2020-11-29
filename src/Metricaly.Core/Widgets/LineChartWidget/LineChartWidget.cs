@@ -32,6 +32,7 @@ namespace Metricaly.Core.Widgets.LineChartWidget
         public string MetricName { get; set; }
         public string Namespace { get; set; }
         public string YAxis { get; set; }
+        public bool Stacked { get; set; }
         public SamplingType SamplingType { get; set; }
     }
 

@@ -35,7 +35,8 @@ import {
   NbCalendarKitModule,
   NbSpinnerModule,
   NbTooltipModule,
-  NbRadioModule
+  NbRadioModule,
+  NbCheckboxModule
 } from '@nebular/theme';
 
 
@@ -74,6 +75,7 @@ import {
     NbSelectModule,
     NbTooltipModule,
     NbRadioModule,
+    NbCheckboxModule,
 
     RouterModule.forChild([
       {

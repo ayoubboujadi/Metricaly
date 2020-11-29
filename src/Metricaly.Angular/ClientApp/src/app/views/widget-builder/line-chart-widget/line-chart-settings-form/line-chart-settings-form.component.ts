@@ -114,6 +114,7 @@ export class LineChartSettingsFormComponent implements OnInit {
       displayLegend: this.settings.displayLegend,
       smoothLines: this.settings.smoothLines,
       filled: this.settings.filled,
+      connectNulls: this.settings.connectNulls,
       xAxis: {
         label: this.settings.xAxisSettings.label
       },

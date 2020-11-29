@@ -6,6 +6,7 @@
       <th>Color</th>
       <th>YAxis</th>
       <th>Aggregation Type</th>
+      <th>Stack</th>
       <th>Remove</th>
     </tr>
   </thead>
@@ -40,6 +41,9 @@
           <nb-option value="Max">Max</nb-option>
           <nb-option value="SamplesCount">Samples Count</nb-option>
         </nb-select>
+      </td>
+      <td>
+        <nb-checkbox status="basic" [checked]="metric.stacked" (checkedChange)='handleStackedChange(metric, $event)'></nb-checkbox>
       </td>
       <td>
         <button nbButton size="small" ghost status="danger" (click)="removeMetric(metric)">
