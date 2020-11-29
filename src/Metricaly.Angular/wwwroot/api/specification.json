@@ -1494,12 +1494,10 @@
       "required": [
         "displayLegend",
         "smoothLines",
-        "filled"
+        "filled",
+        "connectNulls"
       ],
       "properties": {
-        "legendPosition": {
-          "type": "string"
-        },
         "displayLegend": {
           "type": "boolean"
         },
@@ -1507,6 +1505,9 @@
           "type": "boolean"
         },
         "filled": {
+          "type": "boolean"
+        },
+        "connectNulls": {
           "type": "boolean"
         },
         "xAxisSettings": {
@@ -1523,8 +1524,8 @@
     "LineChartAxisSettings": {
       "type": "object",
       "required": [
-        "min",
-        "max"
+        "isMinData",
+        "isMaxData"
       ],
       "properties": {
         "label": {
@@ -1534,9 +1535,15 @@
           "type": "number",
           "format": "double"
         },
+        "isMinData": {
+          "type": "boolean"
+        },
         "max": {
           "type": "number",
           "format": "double"
+        },
+        "isMaxData": {
+          "type": "boolean"
         }
       }
     },

@@ -21,28 +21,28 @@
           [style.background]='metric.color'></span>
       </td>
       <td>
-        <button nbButton ghost status="basic" [disabled]="metric.yAxis == 'left'"
+        <button style="border-radius: .3rem 0rem 0rem .3rem;" nbButton ghost size="small" status="basic" [disabled]="metric.yAxis == 'left'"
           (click)="metric.yAxis = 'left'; updatePlottedMetrics()">
           <nb-icon icon="chevron-left-outline"></nb-icon>
         </button>
 
-        <button nbButton ghost status="basic" [disabled]="metric.yAxis == 'right'"
+        <button style="border-radius: 0rem .3rem .3rem 0rem;" nbButton ghost size="small" status="basic" [disabled]="metric.yAxis == 'right'"
           (click)="metric.yAxis = 'right'; updatePlottedMetrics()">
           <nb-icon icon="chevron-right-outline"></nb-icon>
         </button>
       </td>
       <td>
-        <nb-select placeholder="Sampling type" [(ngModel)]="metric.samplingType"
+        <nb-select size="small" placeholder="Sampling type" [(ngModel)]="metric.samplingType"
           (ngModelChange)="handleSamplingTypeChange(metric)">
           <nb-option value="Average">Average</nb-option>
           <nb-option value="Sum">Sum</nb-option>
           <nb-option value="Min">Min</nb-option>
           <nb-option value="Max">Max</nb-option>
-          <nb-option value="SimpleCount">Simple Count</nb-option>
+          <nb-option value="SamplesCount">Samples Count</nb-option>
         </nb-select>
       </td>
       <td>
-        <button nbButton ghost status="danger" (click)="removeMetric(metric)">
+        <button nbButton size="small" ghost status="danger" (click)="removeMetric(metric)">
           <nb-icon icon="minus-square-outline"></nb-icon>
         </button>
       </td>

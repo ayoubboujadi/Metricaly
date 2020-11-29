@@ -1,22 +1,16 @@
 
-<div>
+<div style="width: 100%;">
   <span *ngIf='!editMode' (click)='editMode=true' class='cell'>
     {{ data }}
   </span>
 
   <div *ngIf='editMode' class="d-flex">
-    <div class=" flex-grow-1">
-      <input nbInput fullWidth #input appAutofocus (keydown.enter)='$event.target.blur()' [(ngModel)]='data'
+    <div class="flex-grow-1">
+      <input nbInput fieldSize="small" #input appAutofocus (keydown.enter)='$event.target.blur()' [(ngModel)]='data'
              type='{{ inputType }}'>
     </div>
 
-    <button nbSuffix nbButton ghost status="success" (mousedown)="save($event)"><nb-icon icon="checkmark-circle-2-outline"></nb-icon></button>
-    <button nbButton ghost status="danger"><nb-icon icon="close-circle-outline"></nb-icon></button>
+    <button nbButton ghost size="small" status="success" (mousedown)="save($event)"><nb-icon icon="checkmark-circle-2-outline"></nb-icon></button>
+    <button nbButton ghost size="small"><nb-icon icon="close-circle-outline"></nb-icon></button>
   </div>
 </div>
-
-
-
-<!--HOW TO USE
-
-<app-edit-input [data]='cost' (focusOut)='saveCost($event)'></app-edit-input>-->

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TimePeriod } from '@app/core/shared/models/timeperiod.model';
 import { WidgetComponent } from '../widget-component.interface';
+import * as numeral from 'numeral';
 
 import {
   GetMetricsAggregatedValueQuery,
@@ -134,7 +135,7 @@ export class SimpleNumberWidgetComponent implements WidgetComponent, OnInit {
           result.forEach(metricAggregatedValue => {
             const dataPoint = this.data.find(y => y.metric.guid === metricAggregatedValue.guid);
             if (dataPoint !== null || dataPoint !== undefined) {
-              dataPoint.value = metricAggregatedValue.value ?? '-';
+              dataPoint.value = metricAggregatedValue.value !== null ? numeral(metricAggregatedValue.value).format('0,0.00') : '-';
             }
             this.loading = false;
           });

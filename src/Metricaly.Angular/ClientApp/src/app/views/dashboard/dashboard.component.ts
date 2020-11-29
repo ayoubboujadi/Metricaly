@@ -251,8 +251,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             height: 2,
             width: 4,
             id: GuidGenerator.newGuid(),
-            x: 0,
-            y: 0
+            x: null,
+            y: null
           };
 
           this.items.push(item);

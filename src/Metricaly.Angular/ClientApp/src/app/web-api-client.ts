@@ -2800,10 +2800,10 @@ export interface ILineChartPlottedMetric {
 }
 
 export class LineChartWidgetSettings implements ILineChartWidgetSettings {
-    legendPosition?: string | undefined;
     displayLegend!: boolean;
     smoothLines!: boolean;
     filled!: boolean;
+    connectNulls!: boolean;
     xAxisSettings?: LineChartAxisSettings | undefined;
     yLeftAxisSettings?: LineChartAxisSettings | undefined;
     yRightAxisSettings?: LineChartAxisSettings | undefined;
@@ -2819,10 +2819,10 @@ export class LineChartWidgetSettings implements ILineChartWidgetSettings {
 
     init(_data?: any) {
         if (_data) {
-            this.legendPosition = _data["legendPosition"];
             this.displayLegend = _data["displayLegend"];
             this.smoothLines = _data["smoothLines"];
             this.filled = _data["filled"];
+            this.connectNulls = _data["connectNulls"];
             this.xAxisSettings = _data["xAxisSettings"] ? LineChartAxisSettings.fromJS(_data["xAxisSettings"]) : <any>undefined;
             this.yLeftAxisSettings = _data["yLeftAxisSettings"] ? LineChartAxisSettings.fromJS(_data["yLeftAxisSettings"]) : <any>undefined;
             this.yRightAxisSettings = _data["yRightAxisSettings"] ? LineChartAxisSettings.fromJS(_data["yRightAxisSettings"]) : <any>undefined;
@@ -2838,10 +2838,10 @@ export class LineChartWidgetSettings implements ILineChartWidgetSettings {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["legendPosition"] = this.legendPosition;
         data["displayLegend"] = this.displayLegend;
         data["smoothLines"] = this.smoothLines;
         data["filled"] = this.filled;
+        data["connectNulls"] = this.connectNulls;
         data["xAxisSettings"] = this.xAxisSettings ? this.xAxisSettings.toJSON() : <any>undefined;
         data["yLeftAxisSettings"] = this.yLeftAxisSettings ? this.yLeftAxisSettings.toJSON() : <any>undefined;
         data["yRightAxisSettings"] = this.yRightAxisSettings ? this.yRightAxisSettings.toJSON() : <any>undefined;
@@ -2850,10 +2850,10 @@ export class LineChartWidgetSettings implements ILineChartWidgetSettings {
 }
 
 export interface ILineChartWidgetSettings {
-    legendPosition?: string | undefined;
     displayLegend: boolean;
     smoothLines: boolean;
     filled: boolean;
+    connectNulls: boolean;
     xAxisSettings?: LineChartAxisSettings | undefined;
     yLeftAxisSettings?: LineChartAxisSettings | undefined;
     yRightAxisSettings?: LineChartAxisSettings | undefined;
@@ -2861,8 +2861,10 @@ export interface ILineChartWidgetSettings {
 
 export class LineChartAxisSettings implements ILineChartAxisSettings {
     label?: string | undefined;
-    min!: number;
-    max!: number;
+    min?: number | undefined;
+    isMinData!: boolean;
+    max?: number | undefined;
+    isMaxData!: boolean;
 
     constructor(data?: ILineChartAxisSettings) {
         if (data) {
@@ -2877,7 +2879,9 @@ export class LineChartAxisSettings implements ILineChartAxisSettings {
         if (_data) {
             this.label = _data["label"];
             this.min = _data["min"];
+            this.isMinData = _data["isMinData"];
             this.max = _data["max"];
+            this.isMaxData = _data["isMaxData"];
         }
     }
 
@@ -2892,15 +2896,19 @@ export class LineChartAxisSettings implements ILineChartAxisSettings {
         data = typeof data === 'object' ? data : {};
         data["label"] = this.label;
         data["min"] = this.min;
+        data["isMinData"] = this.isMinData;
         data["max"] = this.max;
+        data["isMaxData"] = this.isMaxData;
         return data; 
     }
 }
 
 export interface ILineChartAxisSettings {
     label?: string | undefined;
-    min: number;
-    max: number;
+    min?: number | undefined;
+    isMinData: boolean;
+    max?: number | undefined;
+    isMaxData: boolean;
 }
 
 export class WidgetDetailsVmOfLineChartWidget implements IWidgetDetailsVmOfLineChartWidget {

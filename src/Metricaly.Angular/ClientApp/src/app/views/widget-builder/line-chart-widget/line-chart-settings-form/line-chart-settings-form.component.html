@@ -1,4 +1,3 @@
-
 <div>
   <form [formGroup]="widgetSettingsForm" (ngSubmit)="onSubmit()" [style.fontSize.px]="14">
     <div class="row">
@@ -16,6 +15,9 @@
             <div>
               <nb-toggle formControlName="filled">Filled</nb-toggle>
             </div>
+            <div>
+              <nb-toggle formControlName="connectNulls">Connect Missing Data Points</nb-toggle>
+            </div>
           </nb-card-body>
         </nb-card>
       </div>
@@ -27,7 +29,8 @@
             <div formGroupName="xAxis">
               <div class="form-group">
                 <label for="label" class="label">Label</label>
-                <input type="text" class="input-full-width" nbInput fieldSize="small" formControlName="label" placeholder="Enter a X Axis label">
+                <input type="text" class="input-full-width" nbInput fieldSize="small" formControlName="label"
+                  placeholder="Enter a X Axis label">
               </div>
             </div>
           </nb-card-body>
@@ -43,12 +46,43 @@
             <div formGroupName="yAxisLeft">
               <div class="form-group">
                 <label for="label" class="label">Label</label>
-                <input type="text" class="input-full-width" nbInput formControlName="label" placeholder="Enter a Left Y Axis label">
+                <input type="text" class="input-full-width" nbInput fieldSize="small" formControlName="label"
+                  placeholder="Enter a Left Y Axis label">
               </div>
+
+              <div class="form-group">
+                <label for="label" class="label">Minimum axis value</label>
+                <div class="yaxis-minmax-group">
+                  <nb-select formControlName="minOption" size="small" placeholder="Minimum"
+                    (selectedChange)="selectedAxisMinMaxChanged('yAxisLeft', 'min', $event)">
+                    <nb-option value="dynamic">Dynamic</nb-option>
+                    <nb-option value="data">Data Minimum</nb-option>
+                    <nb-option value="custom">Custom</nb-option>
+                  </nb-select>
+                  <input type="number" step="0.01" nbInput class="ml-3 min-input" fieldSize="small"
+                    formControlName="min" placeholder="Minimum value">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="label" class="label">Maximum axis value</label>
+                <div class="yaxis-minmax-group">
+                  <nb-select formControlName="maxOption" size="small"
+                    (selectedChange)="selectedAxisMinMaxChanged('yAxisLeft', 'max', $event)">
+                    <nb-option value="dynamic">Dynamic</nb-option>
+                    <nb-option value="data">Data Maximum</nb-option>
+                    <nb-option value="custom">Custom</nb-option>
+                  </nb-select>
+                  <input type="number" step="0.01" nbInput class="ml-3 max-input" fieldSize="small"
+                    formControlName="max" placeholder="Maximum value">
+                </div>
+              </div>
+
             </div>
           </nb-card-body>
         </nb-card>
       </div>
+
       <div class="col-sm-6">
         <nb-card>
           <nb-card-header>Right Y Axis settings</nb-card-header>
@@ -56,8 +90,38 @@
             <div formGroupName="yAxisRight">
               <div class="form-group">
                 <label for="label" class="label">Label</label>
-                <input type="text" class="input-full-width" nbInput formControlName="label" placeholder="Enter a Right Y Axis label">
+                <input type="text" class="input-full-width" nbInput fieldSize="small" formControlName="label"
+                  placeholder="Enter a Right Y Axis label">
               </div>
+
+              <div class="form-group">
+                <label for="label" class="label">Minimum axis value</label>
+                <div class="yaxis-minmax-group">
+                  <nb-select formControlName="minOption" size="small" placeholder="Minimum"
+                    (selectedChange)="selectedAxisMinMaxChanged('yAxisRight', 'min', $event)">
+                    <nb-option value="dynamic">Dynamic</nb-option>
+                    <nb-option value="data">Data Minimum</nb-option>
+                    <nb-option value="custom">Custom</nb-option>
+                  </nb-select>
+                  <input type="number" step="0.01" nbInput class="ml-3 min-input" fieldSize="small"
+                    formControlName="min" placeholder="Minimum value">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="label" class="label">Maximum axis value</label>
+                <div class="yaxis-minmax-group">
+                  <nb-select formControlName="maxOption" size="small"
+                    (selectedChange)="selectedAxisMinMaxChanged('yAxisRight', 'max', $event)">
+                    <nb-option value="dynamic">Dynamic</nb-option>
+                    <nb-option value="data">Data Maximum</nb-option>
+                    <nb-option value="custom">Custom</nb-option>
+                  </nb-select>
+                  <input type="number" step="0.01" nbInput class="ml-3 max-input" fieldSize="small"
+                    formControlName="max" placeholder="Maximum value">
+                </div>
+              </div>
+
             </div>
           </nb-card-body>
         </nb-card>

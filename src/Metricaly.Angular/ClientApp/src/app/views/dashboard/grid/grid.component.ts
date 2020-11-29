@@ -23,11 +23,12 @@ export class GridComponent implements OnInit, AfterViewInit {
   constructor(private element: ElementRef, private renderer: Renderer2) { }
 
   ngOnInit() {
+    const gridColumns = 20;
     this.renderer.addClass(this.element.nativeElement, 'grid-stack');
-    this.renderer.addClass(this.element.nativeElement, 'grid-stack-12');
+    this.renderer.addClass(this.element.nativeElement, 'grid-stack-' + gridColumns);
 
     this.gridstack = GridStack.init({
-      column: 12,
+      column: gridColumns,
       float: true,
       draggable: {
         handle: '.drag-handle',

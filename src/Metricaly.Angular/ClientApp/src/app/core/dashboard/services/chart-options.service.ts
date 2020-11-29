@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { EChartOption } from 'echarts';
+import { EChartOption, echarts } from 'echarts';
 import * as numeral from 'numeral';
 import { LineChartWidget, LineChartPlottedMetric } from '@app/web-api-client';
 
@@ -21,6 +21,19 @@ export class ChartOptionsService {
         fontSize: 11
       },
 
+      toolbox: {
+        top: 0,
+        feature: {
+          saveAsImage: {
+            title: 'Download Chart as Image'
+          },
+          dataZoom: {
+            yAxisIndex: false,
+            title: { 'zoom': 'Zoom Chart', 'back': 'Remove Zoom' }
+          }
+        }
+      },
+
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -32,16 +45,28 @@ export class ChartOptionsService {
       },
       dataZoom: [
         {
-          type: 'slider'
+          type: 'slider', // shows the timeline at the bottom
+          fillerColor: 'rgba(47,69,84,0.15)',
+          bottom: 2
         },
         {
-          type: 'inside'
+          type: 'inside' // allows zooming in/out by mouse wheel
         }],
       legend: {
+        type: 'scroll',
+        padding: [
+          5,  // up
+          30, // right
+          5,  // down
+          30, // left
+        ],
+        top: 25,
+        //bottom: 0,
+        // orient: 'vertical',
         data: []
       },
       xAxis: {
-        splitNumber: 15,
+        splitNumber: 8,
         name: 'Time',
         type: 'time',
         splitLine: {
@@ -107,7 +132,7 @@ export class ChartOptionsService {
   mapData(metric: any, labels: number[]) {
     const data: any[] = [];
     metric.data.forEach((value, index) => {
-      data.push({ name: labels[index] * 1000, value: [labels[index] * 1000, value ?? '-'] });
+      data.push({ name: labels[index] * 1000, value: [labels[index] * 1000, value] });
     });
     return data;
   }
@@ -145,25 +170,27 @@ export class ChartOptionsService {
           id: 'left',
           show: plottedMetrics.some(metric => metric.yAxis === 'left'),
           name: widgetSettings.yLeftAxisSettings.label,
-          //min: 'dataMin'
+          min: this.getAxisMinValue(widgetSettings.yLeftAxisSettings.min, widgetSettings.yLeftAxisSettings.isMinData),
+          max: this.getAxisMaxValue(widgetSettings.yLeftAxisSettings.max, widgetSettings.yLeftAxisSettings.isMaxData),
         },
         {
           id: 'right',
           show: plottedMetrics.some(metric => metric.yAxis === 'right'),
           name: widgetSettings.yRightAxisSettings.label,
+          min: this.getAxisMinValue(widgetSettings.yRightAxisSettings.min, widgetSettings.yRightAxisSettings.isMinData),
+          max: this.getAxisMaxValue(widgetSettings.yRightAxisSettings.max, widgetSettings.yRightAxisSettings.isMaxData),
         }
       ],
 
       legend: {
         data: plottedMetrics.map(metric => metric.label),
         show: widgetSettings.displayLegend,
-        //align: 'left'
-        //orient: 'vertical'
       },
 
       series: plottedMetricsData.map(metricData => ({
         yAxisIndex: plottedMetrics.find(x => x.guid === metricData.metricGuid).yAxis === 'left' ? 0 : 1,
         type: 'line',
+        connectNulls: widgetSettings.connectNulls,
         data: this.mapData(metricData, labels),
         name: plottedMetrics.find(x => x.guid === metricData.metricGuid).label,
         id: metricData.metricGuid,
@@ -172,12 +199,13 @@ export class ChartOptionsService {
         smooth: widgetSettings.smoothLines,
         markLine: {
           data: [
-            { name: 'Max value', yAxis: 10000 }
+            { name: 'Max value',  symbol: 'none', yAxis: 'max' }
           ],
         }
       }))
     };
 
+    console.log('connectNulls: ' + widgetSettings.connectNulls);
 
     // Set filled value
     if (widgetSettings.filled) {
@@ -212,6 +240,25 @@ export class ChartOptionsService {
     return updateOptions;
   }
 
+  getAxisMinValue(value: number, isData: boolean): string | number {
+    if (isData) {
+      return 'dataMin';
+    } else if (value === null || value === undefined) {
+      return null;
+    } else {
+      return value;
+    }
+  }
+
+  getAxisMaxValue(value: number, isData: boolean): string | number {
+    if (isData) {
+      return 'dataMax';
+    } else if (value === null || value === undefined) {
+      return null;
+    } else {
+      return value;
+    }
+  }
 }
 
 export class LineChartData {

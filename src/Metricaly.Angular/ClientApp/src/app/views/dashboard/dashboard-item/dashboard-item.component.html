@@ -14,7 +14,7 @@
     </div>
 
   </nb-card-header>
-  <nb-card-body style="padding-right: 0px; padding-left: 0px;">
+  <nb-card-body style="padding: 10px 0px;">
 
     <ng-container *ngIf="item.widgetType === 'LineChart'">
       <app-line-chart-widget #widgetElement [widgetData]="item.widgetData" [timePeriod]="selectedTimePeriod"

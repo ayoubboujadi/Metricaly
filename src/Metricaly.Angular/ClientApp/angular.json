@@ -29,7 +29,8 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/@nebular/theme/styles/prebuilt/default.css",
               "node_modules/gridstack/dist/gridstack.min.css",
-              "node_modules/gridstack/dist/gridstack-extra.min.css"
+              "node_modules/gridstack/dist/gridstack-extra.min.css",
+              "src/gridstack-30cols.css"
             ],
             "scripts": [
               "node_modules/pace-js/pace.min.js"

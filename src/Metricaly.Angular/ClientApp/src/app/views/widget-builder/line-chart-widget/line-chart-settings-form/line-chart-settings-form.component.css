@@ -1,0 +1,7 @@
+.min-input:disabled, .max-input:disabled {
+    display:none;
+}
+
+.yaxis-minmax-group {
+    display: block;
+}

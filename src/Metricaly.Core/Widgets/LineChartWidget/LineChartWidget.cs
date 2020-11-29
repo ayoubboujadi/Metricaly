@@ -14,10 +14,10 @@ namespace Metricaly.Core.Widgets.LineChartWidget
 
     public class LineChartWidgetSettings
     {
-        public string LegendPosition { get; set; }
         public bool DisplayLegend { get; set; }
         public bool SmoothLines { get; set; }
         public bool Filled { get; set; }
+        public bool ConnectNulls { get; set; }
         public LineChartAxisSettings XAxisSettings { get; set; } = new LineChartAxisSettings();
         public LineChartAxisSettings YLeftAxisSettings { get; set; } = new LineChartAxisSettings();
         public LineChartAxisSettings YRightAxisSettings { get; set; } = new LineChartAxisSettings();
@@ -38,8 +38,10 @@ namespace Metricaly.Core.Widgets.LineChartWidget
     public class LineChartAxisSettings
     {
         public string Label { get; set; }
-        public double Min { get; set; }
-        public double Max { get; set; }
+        public double? Min { get; set; }
+        public bool IsMinData { get; set; }
+        public double? Max { get; set; }
+        public bool IsMaxData { get; set; }
     }
 
 }
