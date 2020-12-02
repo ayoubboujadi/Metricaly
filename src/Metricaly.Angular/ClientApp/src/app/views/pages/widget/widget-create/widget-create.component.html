@@ -9,20 +9,18 @@
       <form>
         <div class="form-group">
           <label for="application" class="label">Widget type</label>
-          <div>
-            <label style="padding: 4px; margin: 4px;">
+          <div class="widget-type">
+            <label>
               <input type="radio" name="widgetType" value="LineChart" [(ngModel)]="defaultChoice"
                 (ngModelChange)="choose($event)">
-              <img
-                src="https://www.clipartmax.com/png/full/286-2860838_double-line-graph-icon-clipart-bar-chart-black-and-white.png">
+              <img src="/assets/line-chart.png">
               <span>Line Chart</span>
             </label>
-            <label style="padding: 4px; margin: 4px;">
-              <input type="radio" name="wigetType" value="AnotherType" [(ngModel)]="defaultChoice"
+            <label>
+              <input type="radio" name="wigetType" value="SimpleNumber" [(ngModel)]="defaultChoice"
                 (ngModelChange)="choose($event)">
-              <img
-                src="https://www.clipartmax.com/png/full/286-2860838_double-line-graph-icon-clipart-bar-chart-black-and-white.png">
-              <span>Another Type</span>
+              <img src="/assets/simple-number.png">
+              <span>Simple Number</span>
             </label>
           </div>
         </div>
