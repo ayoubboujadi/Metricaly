@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  metricaly.publicapi:
+    image: ${DOCKER_REGISTRY-}metricalypublicapi
+    build:
+      context: .
+      dockerfile: src/Metricaly.PublicApi/Dockerfile
+    networks:
+      - mynetwork
+    ports:
+      - "8081:80"
+
+networks:
+  mynetwork:
+    external: true
