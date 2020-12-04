@@ -44,8 +44,8 @@ namespace Metricaly.Web
                        "  redis.call('zadd', @metricKey, timestamp, timestamp .. ' ' .. count + oldCount .. ' ' .. math.max(oldMax, max) .. ' ' .. math.min(oldMin, min) .. ' ' .. sum + oldSum) " +
                        "end";
 
-            // TODO: Get the host.proxy from the config
-            var server = connectionMultiplexer.GetServer("127.0.0.1", 7001);
+            // TODO: Get the host:port from the config
+            var server = connectionMultiplexer.GetServer("redis:6379");
 
             var prepared = LuaScript.Prepare(script);
             loadedLuaScript = prepared.Load(server);

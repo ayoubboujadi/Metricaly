@@ -33,5 +33,11 @@ namespace Metricaly.PublicApi.Controllers
 
             return Ok(new { metricId = metric.Id });
         }
+
+        [HttpGet("ping")]
+        public ActionResult<string> Ping()
+        {
+            return "pong";
+        }
     }
 }

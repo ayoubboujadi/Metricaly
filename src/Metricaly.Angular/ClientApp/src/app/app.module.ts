@@ -99,7 +99,7 @@ import { API_BASE_URL } from './web-api-client';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    { provide: API_BASE_URL, useFactory: () => 'https://localhost:44344' }
+    { provide: API_BASE_URL, useFactory: () => 'http://localhost:8080' }
   ],
   bootstrap: [AppComponent]
 })

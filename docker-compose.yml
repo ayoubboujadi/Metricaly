@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  metricaly.angular:
+    image: ${DOCKER_REGISTRY-}metricalyangular
+    build:
+      context: .
+      dockerfile: src/Metricaly.Angular/Dockerfile
+    networks:
+      - mynetwork
+    ports:
+      - "8080:80"
+
+  metricaly.publicapi:
+    image: ${DOCKER_REGISTRY-}metricalypublicapi
+    build:
+      context: .
+      dockerfile: src/Metricaly.PublicApi/Dockerfile
+    networks:
+      - mynetwork
+    ports:
+      - "8081:80"
+
+networks:
+  mynetwork:
+    external: true

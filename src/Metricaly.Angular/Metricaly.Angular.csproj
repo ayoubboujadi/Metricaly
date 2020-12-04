@@ -12,6 +12,14 @@
 		<BuildServerSideRenderer>false</BuildServerSideRenderer>
 
 		<TypeScriptExperimentalDecorators>True</TypeScriptExperimentalDecorators>
+
+		<UserSecretsId>f7f9b19d-5d81-4f37-82b4-c0b9e9ca6d38</UserSecretsId>
+
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+
+		<DockerfileContext>..\..</DockerfileContext>
+
+		<DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -26,6 +34,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
 		<PackageReference Include="NSwag.AspNetCore" Version="13.8.2" />
 		<PackageReference Include="NSwag.MSBuild" Version="13.8.2">
@@ -50,9 +59,6 @@
 	  <ProjectReference Include="..\Metricaly.Infrastructure\Metricaly.Infrastructure.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="ClientApp\src\app\views\shared\application-select\" />
-	</ItemGroup>
 
 	<Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
 		<Copy SourceFiles="@(Reference)" DestinationFolder="$(OutDir)References" />
@@ -62,7 +68,7 @@
 
 	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
 		<!-- Ensure Node.js is installed -->
-		<Exec Command="node --version" ContinueOnError="true">
+		<Exec Command="node --version" ContinueOnError="false">
 			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
 		</Exec>
 		<Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
