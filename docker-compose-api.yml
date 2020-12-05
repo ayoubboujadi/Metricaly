@@ -10,6 +10,9 @@ services:
       - mynetwork
     ports:
       - "8081:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
 
 networks:
   mynetwork:

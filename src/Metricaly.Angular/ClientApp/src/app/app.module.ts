@@ -1,11 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { environment } from 'src/environments/environment';
 import { ChartsModule } from 'ng2-charts';
 
 import {
@@ -49,6 +50,7 @@ import { SharedModule } from './views/shared/shared.module';
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 import { CoreModule } from './core/core.module';
 import { API_BASE_URL } from './web-api-client';
+import { AppConfigService } from './core/shared/services/appconfig.service';
 
 @NgModule({
   declarations: [
@@ -99,7 +101,23 @@ import { API_BASE_URL } from './web-api-client';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    { provide: API_BASE_URL, useFactory: () => 'http://localhost:8080' }
+    {
+      provide: APP_INITIALIZER,
+      multi: true,
+      deps: [AppConfigService],
+      useFactory: (appConfigService: AppConfigService) => {
+        return () => {
+          // Make sure to return a promise
+          return appConfigService.loadAppConfig();
+        };
+      }
+    },
+    {
+      provide: API_BASE_URL,
+      useFactory: () => {
+        return environment.apiBaseUrl;
+      },
+    }
   ],
   bootstrap: [AppComponent]
 })
