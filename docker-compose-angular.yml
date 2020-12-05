@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  metricaly.angular:
+    image: ${DOCKER_REGISTRY-}metricalyangular
+    build:
+      context: .
+      dockerfile: src/Metricaly.Angular/Dockerfile
+    networks:
+      - mynetwork
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+
+networks:
+  mynetwork:
+    external: true
