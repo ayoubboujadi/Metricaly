@@ -9,7 +9,6 @@ namespace Metricaly.Infrastructure.Data
     {
         public static void Initialize(ApplicationDbContext context)
         {
-            context.Database.EnsureCreated();
             context.Database.Migrate();
         }
     }
