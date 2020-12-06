@@ -13,6 +13,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__ApplicationConnection=${PostgresqlConnectionString}
+
 
 networks:
   mynetwork:
