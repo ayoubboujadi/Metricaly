@@ -57,7 +57,7 @@ namespace Metricaly.Angular.Filters
 
             if (application == null)
             {
-                logger.LogWarning($"Application does not exist for given ApiKey.");
+                logger.LogWarning($"Application does not exist for given ApiKey: " + apiKey);
                 context.Result = new UnauthorizedResult();
                 return;
             }
