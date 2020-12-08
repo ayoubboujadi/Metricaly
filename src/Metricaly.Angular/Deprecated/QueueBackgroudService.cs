@@ -1,6 +1,6 @@
 ﻿using AdysTech.InfluxDB.Client.Net;
+using Metricaly.Core.Common.Utils;
 using Metricaly.Core.Interfaces;
-using Metricaly.Infrastructure.Common.Extensions;
 using Metricaly.Infrastructure.Services;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;

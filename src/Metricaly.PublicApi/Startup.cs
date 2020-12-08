@@ -28,7 +28,7 @@ namespace Metricaly.PublicApi
             services.AddControllers();
             services.AddMemoryCache();
 
-            services.AddScoped<IMetricsCollectionService, MetricsCollectionService>();
+            services.AddSingleton<IMetricsCollectionService, MetricsCollectionService>();
 
             services.AddScoped<IApplicationRepository, CachedApplicationRepository>();
             services.AddScoped<IMetricRepository, CachedMetricRepository>();

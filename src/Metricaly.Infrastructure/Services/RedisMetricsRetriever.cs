@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Metricaly.Infrastructure.Services
 {
-    public class MetricsRetriever : IMetricsRetriever
+    public class RedisMetricsRetriever : IMetricsRetriever
     {
         private readonly IConnectionMultiplexer connectionMultiplexer;
 
-        public MetricsRetriever(IConnectionMultiplexer connectionMultiplexer)
+        public RedisMetricsRetriever(IConnectionMultiplexer connectionMultiplexer)
         {
             this.connectionMultiplexer = connectionMultiplexer;
         }

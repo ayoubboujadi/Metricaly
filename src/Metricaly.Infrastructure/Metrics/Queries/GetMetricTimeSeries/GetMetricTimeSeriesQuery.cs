@@ -1,11 +1,10 @@
 ﻿using MediatR;
 using Metricaly.Core.Common;
+using Metricaly.Core.Common.Utils;
 using Metricaly.Core.Entities;
 using Metricaly.Core.Interfaces;
-using Metricaly.Infrastructure.Common.Extensions;
 using Metricaly.Infrastructure.Data;
 using Metricaly.Infrastructure.Dtos;
-using Metricaly.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,8 +16,9 @@ namespace Metricaly.Infrastructure.Metrics.Queries.GetMetricTimeSeries
 {
     public class GetMetricTimeSeriesQuery : IRequest<MetricsTimeSeriesResultDto>
     {
-        public long StartTimestamp { get; set; }
+        public long? StartTimestamp { get; set; }
         public long? EndTimestamp { get; set; }
+        public string LiveSpan { get; set; }
         public int SamplingTime { get; set; }
         public Guid ApplicationId { get; set; }
         public List<MetricNamespaceDTO> Metrics { get; set; }
@@ -55,8 +55,7 @@ namespace Metricaly.Infrastructure.Metrics.Queries.GetMetricTimeSeries
             if (dbMetrics.Count == 0)
                 return new MetricsTimeSeriesResultDto();
 
-            long endTimestamp = request.EndTimestamp == null ? TimeStampProvider.GetCurrentTimeStamp(TimePrecisionUnit.Seconds) : (long)request.EndTimestamp;
-
+            var timePeriod = TimePeriodUtils.Parse(request.StartTimestamp, request.EndTimestamp, request.LiveSpan);
 
             MetricsTimeSeriesResultDto result = new MetricsTimeSeriesResultDto();
 
@@ -69,10 +68,10 @@ namespace Metricaly.Infrastructure.Metrics.Queries.GetMetricTimeSeries
                     continue;
 
                 // Retrieve the metrics
-                var metricValues = await metricsRetriever.QueryAsync(dbMetric, new TimePeriod() { StartTimestamp = request.StartTimestamp, EndTimestamp = endTimestamp });
+                var metricValues = await metricsRetriever.QueryAsync(dbMetric, timePeriod);
 
                 // Down sample the metrics
-                var samplingResult = metricDownSampler.DownSample(metricValues, request.SamplingTime, request.StartTimestamp, endTimestamp);
+                var samplingResult = metricDownSampler.DownSample(metricValues, request.SamplingTime, timePeriod.StartTimestamp, timePeriod.EndTimestamp);
 
                 var metricValue = GetMetricTimeSeriesValueForSamplingType(requestMetric, samplingResult);
 

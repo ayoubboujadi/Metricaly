@@ -41,7 +41,7 @@ namespace Infrastructure.UnitTests.Services
         {
             var connectionMultiplexer = GetConnectionMultiplexerMockForSortedSetEntries(new SortedSetEntry[] { new SortedSetEntry(new RedisValue("1000 2 10 50 60"), 1000), });
 
-            var metricsRetriever = new MetricsRetriever(connectionMultiplexer);
+            var metricsRetriever = new RedisMetricsRetriever(connectionMultiplexer);
 
             var metricValues = await metricsRetriever.QueryAsync(applicationId, metricName, metricNamespace, new Metricaly.Core.Common.TimePeriod { StartTimestamp = 0, EndTimestamp = 1000 });
 
@@ -58,7 +58,7 @@ namespace Infrastructure.UnitTests.Services
         {
             var connectionMultiplexer = GetConnectionMultiplexerMockForSortedSetEntries(new SortedSetEntry[] { new SortedSetEntry(new RedisValue("1000 2 10.33 50.55 60.6666"), 1000), });
 
-            var metricsRetriever = new MetricsRetriever(connectionMultiplexer);
+            var metricsRetriever = new RedisMetricsRetriever(connectionMultiplexer);
 
             var metricValues = await metricsRetriever.QueryAsync(applicationId, metricName, metricNamespace, new Metricaly.Core.Common.TimePeriod { StartTimestamp = 0, EndTimestamp = 1000 });
 
@@ -81,7 +81,7 @@ namespace Infrastructure.UnitTests.Services
                 new SortedSetEntry(new RedisValue("1003 2 10 50 60"), 1003),
             });
 
-            var metricsRetriever = new MetricsRetriever(connectionMultiplexer);
+            var metricsRetriever = new RedisMetricsRetriever(connectionMultiplexer);
 
             var metricValues = await metricsRetriever.QueryAsync(applicationId, metricName, metricNamespace, new Metricaly.Core.Common.TimePeriod { StartTimestamp = 0, EndTimestamp = 1000 });
 

@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Metricaly.Core.Common;
+using Metricaly.Core.Common.Utils;
 using Metricaly.Core.Entities;
 using Metricaly.Core.Interfaces;
-using Metricaly.Infrastructure.Common.Extensions;
 using Metricaly.Infrastructure.Data;
 using Metricaly.Infrastructure.Dtos;
 using Metricaly.Infrastructure.Services;
@@ -17,8 +17,9 @@ namespace Metricaly.Infrastructure.Metrics.Queries.GetMetricsAggregatedValue
 {
     public class GetMetricsAggregatedValueQuery : IRequest<List<MetricAggregatedValueDto>>
     {
-        public long StartTimestamp { get; set; }
+        public long? StartTimestamp { get; set; }
         public long? EndTimestamp { get; set; }
+        public string LiveSpan { get; set; }
         public Guid ApplicationId { get; set; }
         public List<AggregateMetricRequestDto> Metrics { get; set; }
     }
@@ -52,7 +53,7 @@ namespace Metricaly.Infrastructure.Metrics.Queries.GetMetricsAggregatedValue
             if (dbMetrics.Count == 0)
                 return new List<MetricAggregatedValueDto>();
 
-            long endTimestamp = request.EndTimestamp == null ? TimeStampProvider.GetCurrentTimeStamp(TimePrecisionUnit.Seconds) : (long)request.EndTimestamp;
+            var timePeriod = TimePeriodUtils.Parse(request.StartTimestamp, request.EndTimestamp, request.LiveSpan);
 
             var result = new List<MetricAggregatedValueDto>();
 
@@ -65,9 +66,9 @@ namespace Metricaly.Infrastructure.Metrics.Queries.GetMetricsAggregatedValue
                     continue;
 
                 // Retrieve the metrics
-                var metricValues = await metricsRetriever.QueryAsync(dbMetric, new TimePeriod() { StartTimestamp = request.StartTimestamp, EndTimestamp = endTimestamp });
+                var metricValues = await metricsRetriever.QueryAsync(dbMetric, new TimePeriod() { StartTimestamp = timePeriod.StartTimestamp, EndTimestamp = timePeriod.EndTimestamp });
 
-                var metricValue = GetMetricTimeSeriesValueForSamplingType(requestMetric, metricValues);
+                var metricValue = GetMetricTimeSeriesValue(requestMetric, metricValues);
 
                 result.Add(metricValue);
             }
@@ -111,7 +112,7 @@ namespace Metricaly.Infrastructure.Metrics.Queries.GetMetricsAggregatedValue
             }
         }
 
-        private MetricAggregatedValueDto GetMetricTimeSeriesValueForSamplingType(AggregateMetricRequestDto requestMetric, MetricValue[] metricValues)
+        private MetricAggregatedValueDto GetMetricTimeSeriesValue(AggregateMetricRequestDto requestMetric, MetricValue[] metricValues)
         {
             var metricValue = new MetricAggregatedValueDto()
             {

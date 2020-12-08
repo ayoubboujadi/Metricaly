@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Metricaly.Infrastructure.Common.Extensions
+namespace Metricaly.Core.Common.Utils
 {
     public enum TimePrecisionUnit
     {

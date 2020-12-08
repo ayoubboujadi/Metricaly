@@ -60,7 +60,7 @@ export class WidgetCreateComponent implements OnInit {
     const widget = CreateWidgetCommand.fromJS({
       applicationId: this.selectedApplicationId,
       name: this.widgetName,
-      widgetType: 'LineChart'
+      widgetType: this.widgetType
     });
 
 
@@ -78,6 +78,6 @@ export class WidgetCreateComponent implements OnInit {
   }
 
   choose(event) {
-    console.log('type changed: ' + event);
+    console.log('type changed: ' + this.widgetType);
   }
 }

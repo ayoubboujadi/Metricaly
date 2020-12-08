@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using Metricaly.Infrastructure.Common.Extensions;
 using FluentAssertions;
+using Metricaly.Core.Common.Utils;
 
-namespace Infrastructure.UnitTests
+namespace Infrastructure.UnitTests.Common.Utils
 {
     public class TimeStampProviderTests
     {

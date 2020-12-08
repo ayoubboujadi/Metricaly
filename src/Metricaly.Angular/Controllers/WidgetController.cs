@@ -31,22 +31,15 @@ namespace Metricaly.Angular.Controllers
         }
 
         [HttpGet("list/{applicationId}")]
-        public async Task<ActionResult<List<WidgetDto>>> List(Guid applicationId)
+        public async Task<ActionResult<List<WidgetDto>>> ListForApplication(Guid applicationId)
         {
             return await mediator.Send(new GetWidgetForApplicationQuery() { ApplicationId = applicationId });
         }
 
-        [HttpGet("type/{widgetId}")]
+        [HttpGet("get/{widgetId}")]
         public async Task<ActionResult<WidgetDto>> GetWidget(Guid widgetId)
         {
-            try
-            {
             return await mediator.Send(new GetWidgetDetails() { WidgetId = widgetId });
-            }
-            catch (Exception ex)
-            {
-            }
-            return NoContent();
         }
     }
 }

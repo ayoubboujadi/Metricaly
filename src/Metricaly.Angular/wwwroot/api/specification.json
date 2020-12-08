@@ -891,7 +891,6 @@
     "GetMetricTimeSeriesQuery": {
       "type": "object",
       "required": [
-        "startTimestamp",
         "samplingTime",
         "applicationId"
       ],
@@ -903,6 +902,9 @@
         "endTimestamp": {
           "type": "integer",
           "format": "int64"
+        },
+        "liveSpan": {
+          "type": "string"
         },
         "samplingTime": {
           "type": "integer",

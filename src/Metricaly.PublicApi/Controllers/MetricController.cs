@@ -29,7 +29,7 @@ namespace Metricaly.PublicApi.Controllers
                 await metricRepository.InsertAsync(metric);
             }
 
-            await metricsCollectionService.CollectAsync(Application.Id, metricName, @namespace, value);
+            await metricsCollectionService.CollectSingleAggregateAsync(Application.Id, metricName, @namespace, value);
 
             return Ok(new { metricId = metric.Id });
         }

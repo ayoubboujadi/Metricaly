@@ -1,26 +1,21 @@
-﻿using Metricaly.Core.Common.Utils;
+﻿using Metricaly.Core.Common;
 using Metricaly.Core.Interfaces;
-using Metricaly.Infrastructure.Common.Models;
-using Metricaly.Infrastructure.Interfaces;
-using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace Metricaly.Web
+namespace Metricaly.Infrastructure.Services
 {
-    public class MetricsCollectionService : IMetricsCollectionService
+    public class RedisMetricsClient : IMetricsClient
     {
         private readonly IConnectionMultiplexer connectionMultiplexer;
-        private readonly RedisSettings redisSettings;
-
         private LoadedLuaScript loadedLuaScript;
 
-        public MetricsCollectionService(IConnectionMultiplexer connectionMultiplexer, IOptions<RedisSettings> options)
+        public RedisMetricsClient(IConnectionMultiplexer connectionMultiplexer)
         {
             this.connectionMultiplexer = connectionMultiplexer;
-            this.redisSettings = options.Value;
-
             Init();
         }
 
@@ -48,27 +43,49 @@ namespace Metricaly.Web
                        "  redis.call('zadd', @metricKey, timestamp, timestamp .. ' ' .. count + oldCount .. ' ' .. math.max(oldMax, max) .. ' ' .. math.min(oldMin, min) .. ' ' .. sum + oldSum) " +
                        "end";
 
-            var server = connectionMultiplexer.GetServer(redisSettings.Host);
+            var server = connectionMultiplexer.GetServer("redis:6379");
 
             var prepared = LuaScript.Prepare(script);
             loadedLuaScript = prepared.Load(server);
         }
 
-        public async Task CollectSingleAggregateAsync(Guid applicationId, string metricName, string metricNamespace, double value)
+        public bool CollectMetric(string metricKey, MetricValue value)
         {
-            var timestamp = TimeStampProvider.GetCurrentTimeStamp(TimePrecisionUnit.Seconds);
-            var redisDb = connectionMultiplexer.GetDatabase();
-            var metricKey = $"{applicationId}:{metricNamespace}:{metricName}";
+            throw new NotImplementedException();
+        }
 
-            await loadedLuaScript.EvaluateAsync(redisDb, new
+        public Task<bool> CollectMetricAsync(string metricKey, MetricValue value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public  MetricValue[] QueryMetrics(string metricKey, long startTimestamp, long endTimestamp)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<MetricValue[]> QueryMetricsAsync(string metricKey, long startTimestamp, long endTimestamp)
+        {
+            var redisDb = connectionMultiplexer.GetDatabase();
+
+            var result = await redisDb.SortedSetRangeByScoreWithScoresAsync(metricKey, startTimestamp, endTimestamp);
+
+            var values = new MetricValue[result.Length];
+            for (int i = 0; i < result.Length; i++)
             {
-                metricKey = (RedisKey)metricKey,
-                timestamp,
-                count = 1,
-                min = value,
-                max = value,
-                sum = value,
-            });
+                var data = result[i].Element.ToString().Trim('"').Split(' ');
+
+                values[i] = new MetricValue
+                {
+                    TimeStamp = (long)result[i].Score,
+                    Count = double.Parse(data[1]),
+                    Min = double.Parse(data[2]),
+                    Max = double.Parse(data[3]),
+                    Sum = double.Parse(data[4])
+                };
+            }
+
+            return values;
         }
     }
 }

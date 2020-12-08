@@ -1603,8 +1603,9 @@ export interface IMetricTimeSeriesValueDto {
 }
 
 export class GetMetricTimeSeriesQuery implements IGetMetricTimeSeriesQuery {
-    startTimestamp!: number;
+    startTimestamp?: number | undefined;
     endTimestamp?: number | undefined;
+    liveSpan?: string | undefined;
     samplingTime!: number;
     applicationId!: string;
     metrics?: MetricNamespaceDTO[] | undefined;
@@ -1622,6 +1623,7 @@ export class GetMetricTimeSeriesQuery implements IGetMetricTimeSeriesQuery {
         if (_data) {
             this.startTimestamp = _data["startTimestamp"];
             this.endTimestamp = _data["endTimestamp"];
+            this.liveSpan = _data["liveSpan"];
             this.samplingTime = _data["samplingTime"];
             this.applicationId = _data["applicationId"];
             if (Array.isArray(_data["metrics"])) {
@@ -1643,6 +1645,7 @@ export class GetMetricTimeSeriesQuery implements IGetMetricTimeSeriesQuery {
         data = typeof data === 'object' ? data : {};
         data["startTimestamp"] = this.startTimestamp;
         data["endTimestamp"] = this.endTimestamp;
+        data["liveSpan"] = this.liveSpan;
         data["samplingTime"] = this.samplingTime;
         data["applicationId"] = this.applicationId;
         if (Array.isArray(this.metrics)) {
@@ -1655,8 +1658,9 @@ export class GetMetricTimeSeriesQuery implements IGetMetricTimeSeriesQuery {
 }
 
 export interface IGetMetricTimeSeriesQuery {
-    startTimestamp: number;
+    startTimestamp?: number | undefined;
     endTimestamp?: number | undefined;
+    liveSpan?: string | undefined;
     samplingTime: number;
     applicationId: string;
     metrics?: MetricNamespaceDTO[] | undefined;
