@@ -1,7 +1,10 @@
+using FluentValidation.AspNetCore;
 using Metricaly.Core.Interfaces;
 using Metricaly.Infrastructure;
 using Metricaly.Infrastructure.Interfaces;
+using Metricaly.PublicApi.Filters;
 using Metricaly.PublicApi.Services;
+using Metricaly.PublicApi.Validators;
 using Metricaly.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +12,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 
 namespace Metricaly.PublicApi
 {
@@ -25,7 +29,12 @@ namespace Metricaly.PublicApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddInfrastructure(Configuration);
-            services.AddControllers();
+            services.AddControllers(options =>
+                {
+                    options.Filters.Add<ValidationFilter>();
+                })
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CollectSingleMetricRequestValidator>());
+
             services.AddMemoryCache();
 
             services.AddSingleton<IMetricsCollectionService, MetricsCollectionService>();

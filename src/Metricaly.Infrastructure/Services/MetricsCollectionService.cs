@@ -1,7 +1,7 @@
-﻿using Metricaly.Core.Common.Utils;
+﻿using Metricaly.Core.Common;
+using Metricaly.Core.Common.Utils;
 using Metricaly.Core.Interfaces;
 using Metricaly.Infrastructure.Common.Models;
-using Metricaly.Infrastructure.Interfaces;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using System;
@@ -19,7 +19,7 @@ namespace Metricaly.Web
         public MetricsCollectionService(IConnectionMultiplexer connectionMultiplexer, IOptions<RedisSettings> options)
         {
             this.connectionMultiplexer = connectionMultiplexer;
-            this.redisSettings = options.Value;
+            redisSettings = options.Value;
 
             Init();
         }
@@ -54,11 +54,15 @@ namespace Metricaly.Web
             loadedLuaScript = prepared.Load(server);
         }
 
-        public async Task CollectSingleAggregateAsync(Guid applicationId, string metricName, string metricNamespace, double value)
+        public async Task CollectSingleMetricAsync(Guid applicationId, string metricName, string metricNamespace, double value, long? timestamp)
         {
-            var timestamp = TimeStampProvider.GetCurrentTimeStamp(TimePrecisionUnit.Seconds);
+            if (timestamp == null || timestamp <= 0)
+            {
+                timestamp = TimeStampProvider.GetCurrentTimeStamp(TimePrecisionUnit.Seconds);
+            }
+
             var redisDb = connectionMultiplexer.GetDatabase();
-            var metricKey = $"{applicationId}:{metricNamespace}:{metricName}";
+            var metricKey = GetMetricKey(applicationId, metricName, metricNamespace);
 
             await loadedLuaScript.EvaluateAsync(redisDb, new
             {
@@ -69,6 +73,32 @@ namespace Metricaly.Web
                 max = value,
                 sum = value,
             });
+        }
+
+        public async Task CollectAggregatedMetricAsync(Guid applicationId, string metricName, string metricNamespace, MetricValue metricValue)
+        {
+            if (metricValue.TimeStamp <= 0)
+            {
+                metricValue.TimeStamp = TimeStampProvider.GetCurrentTimeStamp(TimePrecisionUnit.Seconds);
+            }
+
+            var redisDb = connectionMultiplexer.GetDatabase();
+            var metricKey = GetMetricKey(applicationId, metricName, metricNamespace);
+
+            await loadedLuaScript.EvaluateAsync(redisDb, new
+            {
+                metricKey = (RedisKey)metricKey,
+                timestamp = metricValue.TimeStamp,
+                count = metricValue.Count,
+                min = metricValue.Min,
+                max = metricValue.Max,
+                sum = metricValue.Sum,
+            });;
+        }
+
+        private string GetMetricKey(Guid applicationId, string metricName, string metricNamespace)
+        {
+            return $"{applicationId}:{metricNamespace}:{metricName}";
         }
     }
 }
