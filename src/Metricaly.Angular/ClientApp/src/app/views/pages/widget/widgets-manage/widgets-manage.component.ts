@@ -52,7 +52,7 @@ export class WidgetsManageComponent implements OnInit {
 
   loadWidgets() {
     this.widgetsLoading = true;
-    this.widgetClient.list(this.selectedApplicationId)
+    this.widgetClient.listForApplication(this.selectedApplicationId)
       .subscribe(
         (data) => {
           this.widgetsLoading = false;

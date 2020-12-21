@@ -318,6 +318,76 @@ export class MetricClient implements IMetricClient {
     }
 }
 
+export interface IOptionsClient {
+    getLiveSpanValues(): Observable<LiveSpanValueDto[]>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class OptionsClient implements IOptionsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getLiveSpanValues(): Observable<LiveSpanValueDto[]> {
+        let url_ = this.baseUrl + "/Options/livespan";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetLiveSpanValues(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetLiveSpanValues(<any>response_);
+                } catch (e) {
+                    return <Observable<LiveSpanValueDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<LiveSpanValueDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetLiveSpanValues(response: HttpResponseBase): Observable<LiveSpanValueDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(LiveSpanValueDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<LiveSpanValueDto[]>(<any>null);
+    }
+}
+
 export interface IApplicationClient {
     list(): Observable<ApplicationDto[]>;
     create(createApplicationCommand: CreateApplicationCommand): Observable<FileResponse | null>;
@@ -824,7 +894,7 @@ export class DashboardClient implements IDashboardClient {
 
 export interface IWidgetClient {
     create(request: CreateWidgetCommand): Observable<string>;
-    list(applicationId: string): Observable<WidgetDto[]>;
+    listForApplication(applicationId: string): Observable<WidgetDto[]>;
     getWidget(widgetId: string): Observable<WidgetDto>;
 }
 
@@ -893,7 +963,7 @@ export class WidgetClient implements IWidgetClient {
         return _observableOf<string>(<any>null);
     }
 
-    list(applicationId: string): Observable<WidgetDto[]> {
+    listForApplication(applicationId: string): Observable<WidgetDto[]> {
         let url_ = this.baseUrl + "/api/Widget/list/{applicationId}";
         if (applicationId === undefined || applicationId === null)
             throw new Error("The parameter 'applicationId' must be defined.");
@@ -909,11 +979,11 @@ export class WidgetClient implements IWidgetClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processList(response_);
+            return this.processListForApplication(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processList(<any>response_);
+                    return this.processListForApplication(<any>response_);
                 } catch (e) {
                     return <Observable<WidgetDto[]>><any>_observableThrow(e);
                 }
@@ -922,7 +992,7 @@ export class WidgetClient implements IWidgetClient {
         }));
     }
 
-    protected processList(response: HttpResponseBase): Observable<WidgetDto[]> {
+    protected processListForApplication(response: HttpResponseBase): Observable<WidgetDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -949,7 +1019,7 @@ export class WidgetClient implements IWidgetClient {
     }
 
     getWidget(widgetId: string): Observable<WidgetDto> {
-        let url_ = this.baseUrl + "/api/Widget/type/{widgetId}";
+        let url_ = this.baseUrl + "/api/Widget/get/{widgetId}";
         if (widgetId === undefined || widgetId === null)
             throw new Error("The parameter 'widgetId' must be defined.");
         url_ = url_.replace("{widgetId}", encodeURIComponent("" + widgetId));
@@ -1775,8 +1845,9 @@ export interface IMetricAggregatedValueDto {
 }
 
 export class GetMetricsAggregatedValueQuery implements IGetMetricsAggregatedValueQuery {
-    startTimestamp!: number;
+    startTimestamp?: number | undefined;
     endTimestamp?: number | undefined;
+    liveSpan?: string | undefined;
     applicationId!: string;
     metrics?: AggregateMetricRequestDto[] | undefined;
 
@@ -1793,6 +1864,7 @@ export class GetMetricsAggregatedValueQuery implements IGetMetricsAggregatedValu
         if (_data) {
             this.startTimestamp = _data["startTimestamp"];
             this.endTimestamp = _data["endTimestamp"];
+            this.liveSpan = _data["liveSpan"];
             this.applicationId = _data["applicationId"];
             if (Array.isArray(_data["metrics"])) {
                 this.metrics = [] as any;
@@ -1813,6 +1885,7 @@ export class GetMetricsAggregatedValueQuery implements IGetMetricsAggregatedValu
         data = typeof data === 'object' ? data : {};
         data["startTimestamp"] = this.startTimestamp;
         data["endTimestamp"] = this.endTimestamp;
+        data["liveSpan"] = this.liveSpan;
         data["applicationId"] = this.applicationId;
         if (Array.isArray(this.metrics)) {
             data["metrics"] = [];
@@ -1824,8 +1897,9 @@ export class GetMetricsAggregatedValueQuery implements IGetMetricsAggregatedValu
 }
 
 export interface IGetMetricsAggregatedValueQuery {
-    startTimestamp: number;
+    startTimestamp?: number | undefined;
     endTimestamp?: number | undefined;
+    liveSpan?: string | undefined;
     applicationId: string;
     metrics?: AggregateMetricRequestDto[] | undefined;
 }
@@ -1924,6 +1998,46 @@ export interface IMetricDto {
     namespace?: string | undefined;
     applicationId: string;
     id: string;
+}
+
+export class LiveSpanValueDto implements ILiveSpanValueDto {
+    label?: string | undefined;
+    totalSeconds!: number;
+
+    constructor(data?: ILiveSpanValueDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.label = _data["label"];
+            this.totalSeconds = _data["totalSeconds"];
+        }
+    }
+
+    static fromJS(data: any): LiveSpanValueDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LiveSpanValueDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["label"] = this.label;
+        data["totalSeconds"] = this.totalSeconds;
+        return data; 
+    }
+}
+
+export interface ILiveSpanValueDto {
+    label?: string | undefined;
+    totalSeconds: number;
 }
 
 export class ApplicationDto implements IApplicationDto {

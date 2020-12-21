@@ -1,8 +1,7 @@
 ﻿using AdysTech.InfluxDB.Client.Net;
 using BenchmarkDotNet.Running;
+using Metricaly.Core.Common.Utils;
 using Metricaly.Core.Interfaces;
-using Metricaly.Infrastructure.Common.Extensions;
-using Metricaly.Infrastructure.Services;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;

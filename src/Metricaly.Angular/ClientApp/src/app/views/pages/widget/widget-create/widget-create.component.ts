@@ -44,7 +44,7 @@ export class WidgetCreateComponent implements OnInit {
 
   loadApplicationWidgets() {
     this.widgetsLoading = true;
-    this.widgetService.list(this.selectedApplicationId)
+    this.widgetService.listForApplication(this.selectedApplicationId)
       .subscribe(
         (result) => {
           this.widgetsLoading = false;
@@ -77,7 +77,7 @@ export class WidgetCreateComponent implements OnInit {
       );
   }
 
-  choose(event) {
-    console.log('type changed: ' + this.widgetType);
+  handleWidgetTypeChange(event) {
+    this.widgetType = event;
   }
 }

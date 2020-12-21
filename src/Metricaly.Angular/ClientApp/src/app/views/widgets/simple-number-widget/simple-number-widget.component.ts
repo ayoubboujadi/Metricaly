@@ -116,6 +116,7 @@ export class SimpleNumberWidgetComponent implements WidgetComponent, OnInit {
     return GetMetricsAggregatedValueQuery.fromJS({
       startTimestamp: this._timePeriod.start,
       endTimestamp: this._timePeriod.end,
+      liveSpan: this._timePeriod.liveSpan,
       applicationId: this.applicationId,
       metrics: this._widgetData.plottedMetrics?.map(x => {
         return AggregateMetricRequestDto.fromJS({

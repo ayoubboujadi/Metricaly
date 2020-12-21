@@ -28,10 +28,6 @@ namespace Metricaly.PublicApi.Validators
                 .NotNull()
                 .WithMessage("Sum must be provided.");
 
-            RuleFor(x => x.Average)
-                .NotNull()
-                .WithMessage("Average must be provided.");
-
             RuleFor(x => x.SamplesCount)
                 .NotNull()
                 .WithMessage("SamplesCount must be provided.");

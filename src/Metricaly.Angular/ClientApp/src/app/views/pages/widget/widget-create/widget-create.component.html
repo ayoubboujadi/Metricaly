@@ -12,13 +12,13 @@
           <div class="widget-type">
             <label>
               <input type="radio" name="widgetType" value="LineChart" [(ngModel)]="defaultChoice"
-                (ngModelChange)="choose($event)">
+                (ngModelChange)="handleWidgetTypeChange($event)">
               <img src="/assets/line-chart.png">
               <span>Line Chart</span>
             </label>
             <label>
               <input type="radio" name="wigetType" value="SimpleNumber" [(ngModel)]="defaultChoice"
-                (ngModelChange)="choose($event)">
+                (ngModelChange)="handleWidgetTypeChange($event)">
               <img src="/assets/simple-number.png">
               <span>Simple Number</span>
             </label>

@@ -8,4 +8,5 @@ export class TimePeriod {
 
   public start: number | any
   public end: number | any
+  public liveSpan: string | any | null = null
 }

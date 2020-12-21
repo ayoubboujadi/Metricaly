@@ -1,13 +1,7 @@
 ﻿using MediatR;
-using Metricaly.Core.Interfaces;
 using Metricaly.Infrastructure.Authentication.Commands.Authenticate;
 using Metricaly.Infrastructure.Authentication.Commands.Register;
-using Metricaly.Infrastructure.Identity;
-using Metricaly.Web.Resources;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Metricaly.Web.Controllers

@@ -192,6 +192,31 @@
         }
       }
     },
+    "/Options/livespan": {
+      "get": {
+        "tags": [
+          "Options"
+        ],
+        "operationId": "Options_GetLiveSpanValues",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LiveSpanValueDto"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Application": {
       "get": {
         "tags": [
@@ -514,7 +539,7 @@
         "tags": [
           "Widget"
         ],
-        "operationId": "Widget_List",
+        "operationId": "Widget_ListForApplication",
         "produces": [
           "text/plain",
           "application/json",
@@ -544,7 +569,7 @@
         }
       }
     },
-    "/api/Widget/type/{widgetId}": {
+    "/api/Widget/get/{widgetId}": {
       "get": {
         "tags": [
           "Widget"
@@ -987,7 +1012,6 @@
     "GetMetricsAggregatedValueQuery": {
       "type": "object",
       "required": [
-        "startTimestamp",
         "applicationId"
       ],
       "properties": {
@@ -998,6 +1022,9 @@
         "endTimestamp": {
           "type": "integer",
           "format": "int64"
+        },
+        "liveSpan": {
+          "type": "string"
         },
         "applicationId": {
           "type": "string",
@@ -1051,6 +1078,21 @@
         "id": {
           "type": "string",
           "format": "guid"
+        }
+      }
+    },
+    "LiveSpanValueDto": {
+      "type": "object",
+      "required": [
+        "totalSeconds"
+      ],
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "totalSeconds": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

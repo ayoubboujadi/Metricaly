@@ -22,7 +22,7 @@ export class WidgetsOverviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.widgetClient.list(this.applicationId).subscribe((result) => {
+    this.widgetClient.listForApplication(this.applicationId).subscribe((result) => {
       this.widgets = result;
       this.loading = false;
     });

@@ -24,7 +24,7 @@ namespace Metricaly.PublicApi.Controllers
         [HttpGet("single/{namespace}/{metricName}/{value}")]
         public async Task<ActionResult> Collect(string @namespace, string metricName, double value)
         {
-            await CreateMetricIfItDoesntExist(@namespace, metricName);
+            await CreateMetricIfItDoesntExist(metricName, @namespace);
 
             await metricsCollectionService.CollectSingleMetricAsync(Application.Id, metricName, @namespace, value);
 

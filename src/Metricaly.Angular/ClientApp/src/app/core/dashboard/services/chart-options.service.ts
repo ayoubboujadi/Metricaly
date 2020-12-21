@@ -21,7 +21,7 @@ export class ChartOptionsService {
         fontSize: 11
       },
 
-      toolbox: {
+     /* toolbox: {
         top: 0,
         feature: {
           saveAsImage: {
@@ -32,7 +32,7 @@ export class ChartOptionsService {
             title: { 'zoom': 'Zoom Chart', 'back': 'Remove Zoom' }
           }
         }
-      },
+      },*/
 
       tooltip: {
         trigger: 'axis',
@@ -60,7 +60,7 @@ export class ChartOptionsService {
           5,  // down
           30, // left
         ],
-        top: 25,
+        top: 10,
         //bottom: 0,
         // orient: 'vertical',
         data: []
@@ -194,7 +194,7 @@ export class ChartOptionsService {
         data: this.mapData(metricData, labels),
         name: plottedMetrics.find(x => x.guid === metricData.metricGuid).label,
         id: metricData.metricGuid,
-        //showSymbol: false,
+        showSymbol: false,
         smooth: widgetSettings.smoothLines,
         color: plottedMetrics.find(x => x.guid === metricData.metricGuid).color,
         stack: plottedMetrics.find(x => x.guid === metricData.metricGuid).stacked,
@@ -205,8 +205,6 @@ export class ChartOptionsService {
         }
       }))
     };
-
-    console.log(plottedMetrics.map(x => x.stacked));
 
     // Set filled value
     if (widgetSettings.filled) {

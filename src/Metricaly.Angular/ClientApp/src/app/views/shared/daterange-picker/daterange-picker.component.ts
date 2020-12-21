@@ -26,16 +26,19 @@ export class DaterangePickerComponent implements OnInit {
   };
 
   timeButtons: any = [
-    { value: 1, unit: 'm', label: '5 min', selected: false},
-    { value: 15, unit: 'm', label: '15 min', selected: false},
-    { value: 30, unit: 'm', label: '30 min', selected: false},
-    { value: 1, unit: 'h', label: '1 hour', selected: false},
-    { value: 3, unit: 'h', label: '3 hour', selected: false },
-    { value: 12, unit: 'h', label: '12 hour', selected: false },
+    { value: 1, unit: 'm', rawValue: '1m', label: '1 min', selected: false },
+    { value: 5, unit: 'm', rawValue: '5m', label: '5 min', selected: false },
+    { value: 15, unit: 'm', rawValue: '15m', label: '15 min', selected: false },
+    { value: 30, unit: 'm', rawValue: '30m', label: '30 min', selected: false },
+    { value: 1, unit: 'h', rawValue: '1h', label: '1 hour', selected: false },
+    { value: 3, unit: 'h', rawValue: '3h', label: '3 hours', selected: false },
+    { value: 6, unit: 'h', rawValue: '6h', label: '6 hours', selected: false },
+    { value: 12, unit: 'h', rawValue: '12h', label: '12 hours', selected: false },
+    { value: 24, unit: 'h', rawValue: '1d', label: '1 day', selected: false },
   ];
 
   ngOnInit(): void {
-    this.selectedDaterange = { start: moment().subtract(1, 'hours'), end: null /* null for NOW */ };
+    this.selectedDaterange = { start: null, end: null, liveSpan: '1h' };
   }
 
   handleSelectedDaterangeChange(newDateRange: DatetimeRange) {
@@ -55,6 +58,7 @@ export class DaterangePickerComponent implements OnInit {
     item.selected = true;
     const newDateRange = new DatetimeRange;
     newDateRange.start = moment().subtract(item.value, item.unit as DurationInputArg2);
+    newDateRange.liveSpan = item.rawValue;
 
     this.selectedDaterange = newDateRange;
     this.selectedDaterangeChange.emit(this.selectedDaterange);

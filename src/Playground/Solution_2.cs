@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Metricaly.Angular;
-using Metricaly.Infrastructure.Common.Extensions;
+using Metricaly.Core.Common.Utils;
 
 namespace Playground
 {

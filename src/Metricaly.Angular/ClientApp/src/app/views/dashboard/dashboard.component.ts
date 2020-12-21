@@ -51,8 +51,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   timer: any;
   savingDashboard = false;
 
-  selectedDaterange: DatetimeRange = { start: moment().subtract(12, 'hours'), end: null /* null for NOW */ };
-  selectedTimePeriod: TimePeriod = { start: this.selectedDaterange?.start?.unix(), end: this.selectedDaterange?.end?.unix() };
+  selectedDaterange: DatetimeRange = { start: moment().subtract(12, 'hours'), end: null, liveSpan: '1h' };
+  selectedTimePeriod: TimePeriod = { start: this.selectedDaterange?.start?.unix(), end: this.selectedDaterange?.end?.unix(), liveSpan: '' };
 
   constructor(private dashboardClient: DashboardClient, private widgetClient: WidgetClient,
     private dialogService: NbDialogService, private route: ActivatedRoute, private nbMenuService: NbMenuService,
@@ -120,7 +120,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.components.forEach(x => {
         x?.loadData();
       });
-    }, 2000);
+    }, 1000);
   }
 
   loadDashboardWidgetsData() {
@@ -227,7 +227,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     this.selectedDaterange = newDateRange;
-    this.selectedTimePeriod = { start: this.selectedDaterange?.start?.unix(), end: this.selectedDaterange?.end?.unix() };
+    this.selectedTimePeriod = { start: this.selectedDaterange?.start?.unix(), end: this.selectedDaterange?.end?.unix(), liveSpan: newDateRange.liveSpan };
   }
 
   addWidget() {

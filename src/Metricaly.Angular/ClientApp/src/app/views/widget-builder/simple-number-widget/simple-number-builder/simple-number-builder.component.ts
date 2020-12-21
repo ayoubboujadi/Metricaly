@@ -31,8 +31,9 @@ export class SimpleNumberBuilderComponent implements OnInit, OnDestroy {
   _selectedDaterange: TimePeriod = new TimePeriod(null, null);
   @Input()
   public set selectedDaterange(newValue: any) {
-    this._selectedDaterange.start = newValue.start.unix();
+    this._selectedDaterange.start = newValue.start ? newValue.start.unix() : null;
     this._selectedDaterange.end = newValue.end ? newValue.end.unix() : null;
+    this._selectedDaterange.liveSpan = newValue.liveSpan;
     this.widgetChildElement?.hardReloadPlottedMetrics();
   }
 

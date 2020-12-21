@@ -16,7 +16,9 @@
         <nb-icon class="mr-3" (click)="toggleMenu()" style="font-size: 1.8rem; color: #8f9bb3; cursor: pointer"
           icon="menu-outline"></nb-icon>
         <span class="pl-3" style="border-left: 1px solid #edf1f7; font-size: 1.7rem;">
-          <img style="height: 31px;" src="/assets/download.png" alt="metricaly">
+          <a [routerLink]="['/home']">
+            <img style="height: 31px;" src="/assets/logo.png" alt="metricaly">
+          </a>
         </span>
       </div>
       <div>

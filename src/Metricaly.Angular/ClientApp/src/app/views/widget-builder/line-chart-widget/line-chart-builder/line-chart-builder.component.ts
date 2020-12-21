@@ -35,8 +35,9 @@ export class LineChartBuilderComponent implements OnInit, OnDestroy {
 
   @Input()
   public set selectedDaterange(newValue: any) {
-    this._selectedDaterange.start = newValue.start.unix();
+    this._selectedDaterange.start = newValue.start ? newValue.start.unix() : null;
     this._selectedDaterange.end = newValue.end ? newValue.end.unix() : null;
+    this._selectedDaterange.liveSpan = newValue.liveSpan;
     this.lineChartWidgetChild?.hardReloadPlottedMetrics();
   }
 
@@ -57,7 +58,6 @@ export class LineChartBuilderComponent implements OnInit, OnDestroy {
   constructor(private dataGenerator: DummyDataGeneratorService, private colorsGenerator: ColorsGeneratorService,
     private metricClient: MetricClient) {
   }
-
 
   ngOnInit(): void {
     this.loadingMetrics = true;

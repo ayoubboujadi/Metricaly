@@ -68,6 +68,7 @@ export class LineChartWidgetComponent implements WidgetComponent, OnInit {
     return GetMetricTimeSeriesQuery.fromJS({
       startTimestamp: this._timePeriod.start,
       endTimestamp: this._timePeriod.end,
+      liveSpan: this._timePeriod.liveSpan,
       samplingTime: this._widgetData.samplingTime,
       applicationId: this.applicationId,
       metrics: this._widgetData.plottedMetrics?.map(x => {

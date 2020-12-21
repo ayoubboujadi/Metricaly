@@ -23,7 +23,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   constructor(private element: ElementRef, private renderer: Renderer2) { }
 
   ngOnInit() {
-    const gridColumns = 20;
+    const gridColumns = 30;
     this.renderer.addClass(this.element.nativeElement, 'grid-stack');
     this.renderer.addClass(this.element.nativeElement, 'grid-stack-' + gridColumns);
 

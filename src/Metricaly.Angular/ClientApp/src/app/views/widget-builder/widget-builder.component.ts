@@ -15,7 +15,7 @@ import { NbToastrService, NbGlobalPhysicalPosition } from '@nebular/theme';
 })
 export class WidgetBuilderComponent implements OnInit, OnDestroy {
 
-  selectedDaterange: DatetimeRange = { start: moment().subtract(1, 'hours'), end: null /* null for NOW */ };
+  selectedDaterange: DatetimeRange = { start: null, end: null, liveSpan: '1h'};
   widgetData: any;
   widget: WidgetDto;
   applicationId: string;
