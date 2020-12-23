@@ -1,4 +1,5 @@
 
+
  <img align="left" width="170" height="110" src="https://i.imgur.com/1B04gWW.png" />
 
 # Welcome to Metricaly!
@@ -6,8 +7,8 @@ Public API: [![Build Status](https://ayoubbou.visualstudio.com/Metricaly/_apis/b
 
 <br/>
 
-Metricaly is a free, open-source, and realtime monitoring solution, Metricaly provides an API where Metrics data can be sent where it is automatically aggregated, sampled, and stored.
-Highly customizable dashboards can be created using multiple widgets to plot and easily monitor your applications, services, servers, or infrastructures.
+Metricaly is a free, open-source, and realtime monitoring solution, Metricaly provides an API where Metrics data can be sent, automatically aggregated, sampled, and stored.
+Highly customizable dashboards can be created using multiple widgets to plot and visualize the Metrics, which allows for an overview of the monitored system.
 
 > Disclaimer: Metricaly is a hoby project of mine, I started it because
 > I wanted to extand and learn more about ASP.NET Core and Angular, it
@@ -17,9 +18,8 @@ Highly customizable dashboards can be created using multiple widgets to plot and
 
 # How does it work?
 1. Sign up and get an API key.
-2. Send the Metric data using one of the API endpoints.
-3. Create a Widget in the web portal that plots the Metric.
-4. Add the created widget to a new or existing Dashboard.
+2. Send the Metric(s) data using one of the API endpoints.
+3. Create Widgets and Dashboards to plot and visualize the sent Metrics.
 
 # Features
 
@@ -54,7 +54,96 @@ Two data storage solutions are used, PostgreSQL and redis.
 ## Use Cases
 You can use metricaly to monitor any type of application as long as it has access to the internet.
 
+## API Documentation
+All requests should be sent to the following host: `api.metricaly.com`
+The `ApiKey` header should be provided for all requests.
 
+The following API endpoints allow for submission of Metric(s).
+
+### Endpoint 1
+
+**Endpoint:** `/collect/single/{namespace}/{metricName}/{value}`
+**Method:** `GET`
+**Body:** `none`
+**Description:** This is the simplest way to send a single Metric value, also, using this API endpoint will store the sent Metric with the current unix timestamp.
+
+**curl Example:**
+```console
+curl -X GET \
+  https://api.metricaly.com/collect/performance/cpu/62 \
+  -H 'ApiKey: 53DtDkHM*******************EqSn9E='
+```
+---
+### Endpoint 2
+
+**Endpoint:** `/collect/multiple`
+**Method:** `POST`
+**Body:** 
+
+    [{
+        "metricName": "string",
+        "metricNamespace": "string",
+        "value": 0,
+        "timestamp": 0
+    }]
+
+**Description:** Using this endpoint allows for the epecification of the timestamp, as well as sending multiple Metrics at the same time.
+
+**curl Example:**
+```console
+curl -X POST \
+  https://api.metricaly.com/collect/multiple \
+  -H 'ApiKey: 53DtDkHM*******************EqSn9E=' \
+  -H 'Content-Type: application/json' \
+  -d '[
+    {
+        "metricName": "cpu",
+        "metricNamespace": "performance",
+        "value": 62,
+        "timestamp": 1608715412
+    }
+  ]'
+```
+---
+### Endpoint 3
+
+**Endpoint:** `/collect/aggregated`
+**Method:** `POST`
+**Body:**
+```
+[
+  {
+      "metricName": "string",
+      "metricNamespace": "string",
+      "max": 0,
+      "min": 0,
+      "sum": 0,
+      "samplesCount": 0,
+      "timestamp": 0
+  }
+]
+```
+**Description:** If Metrics are aggregated on the client side, this endpoint can be used to send their values.
+
+**curl Example:**
+```console
+curl -X POST \
+  https://localhost:44334/collect/aggregated \
+  -H 'ApiKey: 53DtDkHM*******************EqSn9E=' \
+  -H 'Content-Type: application/json' \
+  -H 'cache-control: no-cache' \
+  -d '[
+    {
+        "metricName": "cpu",
+        "metricNamespace": "performance",
+        "max": 95,
+        "min": 32,
+        "sum": 763,
+        "samplesCount": 12,
+        "timestamp": 1608715412
+    }
+]'
+```
 
 ## Deployment of Metricaly
 
@@ -76,4 +165,5 @@ Things that I'd like to add/fix in Metricaly in the future:
 
     dotnet ef database update -c applicationdbcontext -p ../Metricaly.Infrastructure/Metricaly.Infrastructure.csproj -s Metricaly.Angular.csproj
 
-dotnet ef migrations add AddedDashboardTables2 --context applicationdbcontext -p ../Metricaly.Infrastructure/Metricaly.Infrastructure.csproj -s Metricaly.Angular.csproj -o Data/Migrations
+    dotnet ef migrations add AddedDashboardTables2 --context applicationdbcontext -p ../Metricaly.Infrastructure/Metricaly.Infrastructure.csproj -s Metricaly.Angular.csproj -o Data/Migrations
+

@@ -43,6 +43,17 @@ namespace Metricaly.PublicApi
             services.AddScoped<IMetricRepository, CachedMetricRepository>();
             services.AddScoped<MetricRepository>();
             services.AddScoped<ApplicationRepository>();
+
+            // Register the Swagger services
+            services.AddSwaggerDocument(settings =>
+            {
+                settings.PostProcess = document =>
+                {
+                    document.Info.Version = "v1";
+                    document.Info.Title = "Metricaly Public API";
+                    document.Info.Description = "REST API for Metricaly.";
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +63,10 @@ namespace Metricaly.PublicApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // Register the Swagger generator and the Swagger UI middlewares
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseHttpsRedirection();
 

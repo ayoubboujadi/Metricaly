@@ -1,14 +1,159 @@
-<h1>Hello, world!</h1>
-<p>Welcome to your new single-page application, built with:</p>
-<ul>
-  <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-  <li><a href='https://angular.io/'>Angular</a> and <a href='http://www.typescriptlang.org/'>TypeScript</a> for client-side code</li>
-  <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
-</ul>
-<p>To help you get started, we've also set up:</p>
-<ul>
-  <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
-  <li><strong>Angular CLI integration</strong>. In development mode, there's no need to run <code>ng serve</code>. It runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
-  <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration automatically invokes <code>ng build</code> to produce minified, ahead-of-time compiled JavaScript files.</li>
-</ul>
-<p>The <code>ClientApp</code> subdirectory is a standard Angular CLI application. If you open a command prompt in that directory, you can run any <code>ng</code> command (e.g., <code>ng test</code>), or use <code>npm</code> to install extra packages into it.</p>
+<div class="row">
+  <div class="col-md-3">
+    <div class="card-counter primary">
+      <i class="fa fa-code-fork"></i>
+      <nb-icon class="card-icon" icon="star"></nb-icon>
+      <span class="count-numbers">12</span>
+      <span class="count-name">Applications</span>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card-counter danger">
+      <i class="fa fa-ticket"></i>
+      <span class="count-numbers">599</span>
+      <span class="count-name">Metrics</span>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card-counter success">
+      <i class="fa fa-database"></i>
+      <span class="count-numbers">6875</span>
+      <span class="count-name">Dashboards</span>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card-counter info">
+      <i class="fa fa-users"></i>
+      <span class="count-numbers">35</span>
+      <span class="count-name">Widgets</span>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-md-12">
+    <nb-card>
+      <nb-card-body>
+        <div class="h4 my-3">Getting Started</div>
+        <div class="h6 my-3"> Please follow the steps bellow in order to get started with Metricaly:</div>
+
+        <p>In order to start with Metricaly you first need to <a [routerLink]="['/application']">create an
+            Application</a>. </p>
+
+        <p>Once the Application is created, you will obtain an ApiKey, the ApiKey needs to be provided with every
+          request (as a header value) sent to Metricaly.</p>
+
+        <p>Go to your code and decide which Metric you want to store and monitor, once identified, you can simply use
+          one of the following endpoints to send the Metric.</p>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Endpoint</th>
+              <th>Method</th>
+              <th>Body</th>
+              <th>curl Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>This is the simplest way to send a single Metric value, also, using this API endpoint will store the
+                sent Metric with the current unix timestamp.</td>
+              <td><code>{{ '/collect/single/{namespace}
+                /{metricName}/{value}' }}</code></td>
+              <td><strong>GET</strong></td>
+              <td>none</td>
+              <td>
+                <pre><code>curl -X GET \
+  https://api.metricaly.com/collect/performance/cpu/62 \
+  -H 'ApiKey: 53DtDkHM*******************EqSn9E='
+</code></pre>
+              </td>
+            </tr>
+            <tr>
+              <td>Using this endpoint allows for the epecification of the timestamp, as well as sending multiple Metrics
+                at the same time.</td>
+              <td><code>{{ '/collect/multiple' }}</code></td>
+              <td><strong>POST</strong></td>
+              <td>
+                <pre><code>{{ '[
+  {
+    "metricName": "string",
+    "metricNamespace": "string",
+    "value": 0,
+    "timestamp": 0
+  }
+]' }}</code></pre>
+              </td>
+
+              <td>
+                <pre><code>curl -X POST \
+  https://api.metricaly.com/collect/multiple \
+  -H 'ApiKey: 53DtDkHM*******************EqSn9E=' \
+  -H 'Content-Type: application/json' \
+  -d '[
+    {{'{'}}
+        "metricName": "cpu",
+        "metricNamespace": "performance",
+        "value": 12,
+        "timestamp": 1608715412
+    {{'}'}}
+  ]'
+</code></pre>
+              </td>
+
+            </tr>
+
+            <tr>
+              <td>If Metrics are aggregated on the client side, this endpoint can be used to send their values.</td>
+              <td><code>{{ '/collect/aggregated' }}</code></td>
+              <td><strong>POST</strong></td>
+              <td>
+                <pre><code>[
+  {{'{'}}
+      "metricName": "string",
+      "metricNamespace": "string",
+      "max": 0,
+      "min": 0,
+      "sum": 0,
+      "samplesCount": 0,
+      "timestamp": 0
+  {{'}'}}
+]</code></pre>
+              </td>
+              <td>
+                <pre><code>curl -X POST \
+https://api.metricaly.com/collect/aggregated \
+  -H 'ApiKey: 53DtDkHM*******************EqSn9E=' \
+  -H 'Content-Type: application/json' \
+  -H 'cache-control: no-cache' \
+  -d '[
+    {{ '{' }}
+        "metricName": "cpu",
+        "metricNamespace": "performance",
+        "max": 95,
+        "min": 32,
+        "sum": 763,
+        "samplesCount": 12,
+        "timestamp": 1608715412
+    {{ '}' }}
+]'</code></pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+
+        <div> <strong>namespace:</strong> is the namespace of the metric you want to store, namespaces are a way to
+          group different Metrics together.</div>
+        <div> <strong>metricName:</strong> is the unique name of the metric within the same namespace.</div>
+        <div> <strong>value:</strong> the value of the metrics, a double value.</div>
+
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
